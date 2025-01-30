@@ -65,12 +65,16 @@ internal class JobManager : IJobManager
         catch (Exception ex)
         {
             _logger.LogError(ex, "Job {Job} failed with an exception", job);
-            job.Exception = ex;
+            job.Exception = new ExceptionSnapshot
+            {
+                Message = ex.Message,
+                ExceptionType = ex.GetType().FullName ?? "<?>",
+                StackTrace = ex.StackTrace ?? "<no stacktrace>",
+            };
         }
         finally
         {
             _logger.LogInformation("Marking job {Job} as completed", job);
-            await _jobStorage.SetJobStatusAsync(job.Id, JobStatus.Completed, cancellationToken);
             await _jobStorage.MarkAsCompleted(job, cancellationToken);
         }
     }

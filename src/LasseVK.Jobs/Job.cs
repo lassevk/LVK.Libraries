@@ -10,5 +10,6 @@ public abstract class Job
     public string Id { get; internal set; } = Guid.CreateVersion7().ToString("N");
 
     [JsonPropertyName("ex")]
-    public Exception? Exception { get; internal set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public ExceptionSnapshot? Exception { get; internal set; }
 }

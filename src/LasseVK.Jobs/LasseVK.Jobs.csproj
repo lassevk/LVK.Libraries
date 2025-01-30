@@ -16,6 +16,9 @@
       <Compile Update="MemoryJobStorageEnvelope.cs">
         <DependentUpon>MemoryJobStorage.cs</DependentUpon>
       </Compile>
+      <Compile Update="ExceptionSnapshot.cs">
+        <DependentUpon>Job.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>

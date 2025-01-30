@@ -24,8 +24,6 @@ public class Application : IConsoleApplication
             Operand2 = new CalculateOperand2Job(),
         };
 
-        await _jobManager.SubmitAsync(sumJob.Operand1, cancellationToken);
-        System.Console.WriteLine("HERE");
         await _jobManager.SubmitAsync(sumJob, cancellationToken);
 
         await _jobManager.HandleAllJobsAsync(cancellationToken);

@@ -8,6 +8,7 @@ public class CalculateSumJobHandler : IJobHandler<CalculateSumJob>
     {
         job.Result = job.Operand1.Operand + job.Operand2.Operand;
         System.Console.WriteLine($"Sum = {job.Result}");
+        throw new Exception("Test exception");
         return Task.CompletedTask;
     }
 }
