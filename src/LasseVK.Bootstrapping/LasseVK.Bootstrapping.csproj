@@ -14,4 +14,16 @@
       <ProjectReference Include="..\LasseVK.Core\LasseVK.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="CommandLineArguments\StringCommandLineArgumentProperty.cs">
+        <DependentUpon>ICommandLineArgumentProperty.cs</DependentUpon>
+      </Compile>
+      <Compile Update="CommandLineArguments\StringCollectionCommandLineArgumentProperty.cs">
+        <DependentUpon>ICommandLineArgumentProperty.cs</DependentUpon>
+      </Compile>
+      <Compile Update="CommandLineArguments\BooleanCommandLineArgumentProperty.cs">
+        <DependentUpon>ICommandLineArgumentProperty.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

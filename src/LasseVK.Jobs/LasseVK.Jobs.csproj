@@ -6,4 +6,15 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Compile Update="JobManager.cs">
+        <DependentUpon>IJobManager.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\LasseVK.Bootstrapping\LasseVK.Bootstrapping.csproj" />
+      <ProjectReference Include="..\LasseVK.Core\LasseVK.Core.csproj" />
+    </ItemGroup>
+
 </Project>
