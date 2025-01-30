@@ -14,4 +14,16 @@
       <ProjectReference Include="..\..\src\LasseVK.Jobs\LasseVK.Jobs.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="Jobs\CalculateOperand1Handler.cs">
+        <DependentUpon>CalculateOperand1Job.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Jobs\CalculateOperand2Handler.cs">
+        <DependentUpon>CalculateOperand2Job.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Jobs\CalculateSumJobHandler.cs">
+        <DependentUpon>CalculateSumJob.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

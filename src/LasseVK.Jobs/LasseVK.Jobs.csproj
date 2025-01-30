@@ -10,6 +10,12 @@
       <Compile Update="JobManager.cs">
         <DependentUpon>IJobManager.cs</DependentUpon>
       </Compile>
+      <Compile Update="MemoryJobStorage.cs">
+        <DependentUpon>IJobStorage.cs</DependentUpon>
+      </Compile>
+      <Compile Update="MemoryJobStorageEnvelope.cs">
+        <DependentUpon>MemoryJobStorage.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
