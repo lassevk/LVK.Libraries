@@ -1,2 +1,11 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using LasseVK.Bootstrapping;
+
+using Microsoft.Extensions.Hosting;
+
+using Sandbox.Console;
+
+HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+builder.Bootstrap(new ModuleBootstrapper());
+
+IHost host = builder.Build();
+await host.RunAsConsoleApplicationAsync<Application>();

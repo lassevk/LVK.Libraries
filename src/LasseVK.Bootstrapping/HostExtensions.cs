@@ -10,7 +10,7 @@ namespace LasseVK.Bootstrapping;
 [PublicAPI]
 public static class HostExtensions
 {
-    public static async Task RunAsConsoleApplicationAsync<T>(this IHost host, CancellationToken cancellationToken = default)
+    public static async Task RunAsConsoleApplicationAsync<[MeansImplicitUse] T>(this IHost host, CancellationToken cancellationToken = default)
         where T : class, IConsoleApplication
     {
         IHostApplicationLifetime hal = host.Services.GetRequiredService<IHostApplicationLifetime>();
