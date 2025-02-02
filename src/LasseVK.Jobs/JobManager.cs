@@ -44,6 +44,11 @@ internal class JobManager : IJobManager
 
             foreach (string group in groupsWithPendingJobs)
             {
+                if (group == "" && !_options.AllowUngroupedJobs)
+                {
+                    continue;
+                }
+
                 int roomInGroup = await GetAvailableCapacityInGroup(group, cancellationToken);
 
                 if (await ExecuteJobsInGroupAsync(group, roomInGroup, cancellationToken))
