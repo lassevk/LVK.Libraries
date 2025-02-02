@@ -62,6 +62,19 @@ internal class JobManager : IJobManager
         _logger.LogInformation("Got {JobCount} jobs from group {Group}", jobs.Count, group);
         foreach (Job job in jobs)
         {
+            if (!JobConfigurationIsValid(job))
+            {
+                _logger.LogInformation("Job {Job} depends on one more jobs that failed, marking as failed", job);
+                job.Exception = new ExceptionSnapshot
+                {
+                    Message = "Job depends on one more jobs that failed",
+                    ExceptionType = "JobConfigurationInvalid",
+                    StackTrace = "<no stacktrace>",
+                };
+                await _jobStorage.MarkAsCompleted(job, cancellationToken);
+                continue;
+            }
+
             _logger.LogInformation("Starting job {Job}", job);
             if (await _jobStorage.MarkAsExecuting(job.Id, cancellationToken))
             {
@@ -71,6 +84,27 @@ internal class JobManager : IJobManager
         }
 
         return anyHandled;
+    }
+
+    private bool JobConfigurationIsValid(Job job)
+    {
+        if (!_dependencyProperties.TryGetValue(job.GetType(), out List<PropertyInfo>? properties))
+        {
+            return true;
+        }
+
+        foreach (PropertyInfo property in properties)
+        {
+            if (property.GetValue(job) is Job dependency)
+            {
+                if (!JobConfigurationIsValid(dependency) || dependency.Exception is not null)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     private async Task<int> GetAvailableCapacityInGroup(string group, CancellationToken cancellationToken)
@@ -106,7 +140,6 @@ internal class JobManager : IJobManager
 
     private async Task HandleJobAsync(Job job, CancellationToken cancellationToken)
     {
-        await Task.Yield();
         using IServiceScope serviceScope = _serviceProvider.CreateScope();
 
         Type handlerType = typeof(IJobHandler<>).MakeGenericType(job.GetType());

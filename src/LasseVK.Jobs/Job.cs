@@ -11,18 +11,10 @@ public abstract class Job
 
     [JsonPropertyName("ex")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ExceptionSnapshot? Exception { get; internal set; }
+    public ExceptionSnapshot? Exception { get; set; }
 
     [JsonIgnore]
     public virtual string Group => "";
 
-    public void EnsureSuccess()
-    {
-        if (Exception != null)
-        {
-            throw new InvalidOperationException("Job failed");
-        }
-    }
-
-    public override string ToString() => $"{GetType().Name}#{Id}";
+    public override string ToString() => $"{(string.IsNullOrWhiteSpace(Group) ? "*" : Group)}:{GetType().Name}#{Id}";
 }
