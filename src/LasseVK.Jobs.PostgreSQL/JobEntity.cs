@@ -28,4 +28,13 @@ internal class JobEntity
     public List<JobEntity>? DependsOn { get; init; }
 
     public List<JobEntity>? DependsOnMe { get; init; }
+
+    [Column("queued")]
+    public DateTimeOffset WhenQueued { get; set; } = DateTimeOffset.UtcNow;
+
+    [Column("started")]
+    public DateTimeOffset? WhenStarted { get; set; }
+
+    [Column("completed")]
+    public DateTimeOffset? WhenCompleted { get; set; }
 }

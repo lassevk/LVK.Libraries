@@ -2,6 +2,7 @@
 
 namespace Sandbox.Console.Jobs;
 
+[JobIdentifier("report")]
 public class ReportDoneJob : Job
 {
     public required WriteSidecarFileJob WritesidecarFile { get; init; }

@@ -2,6 +2,7 @@
 
 namespace Sandbox.Console.Jobs;
 
+[JobIdentifier("sidecar")]
 public class WriteSidecarFileJob : Job
 {
     public required ChecksumJob Checksum { get; init; }

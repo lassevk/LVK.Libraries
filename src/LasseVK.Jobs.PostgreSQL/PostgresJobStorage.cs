@@ -52,12 +52,6 @@ internal class PostgresJobStorage : IJobStorage
             DependsOn = dependencies,
             Status = JobStatus.Queued, };
 
-        // foreach (JobEntity dependency in dependencies)
-        // {
-        //     dependency.DependsOnMe ??= [];
-        //     dependency.Dependents.Add(entity);
-        // }
-        //
         dbContext.Jobs!.Add(entity);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
@@ -137,6 +131,7 @@ internal class PostgresJobStorage : IJobStorage
         SerializedJob serialized = JobSerializer.Serialize(job);
         entity.JobJson = serialized.Json;
         entity.Status = JobStatus.Completed;
+        entity.WhenCompleted = DateTime.UtcNow;
 
         await dbContext.SaveChangesAsync(cancellationToken);
     }
@@ -144,7 +139,9 @@ internal class PostgresJobStorage : IJobStorage
     public async Task<bool> MarkAsExecuting(string id, CancellationToken cancellationToken)
     {
         await using PostgresDbContext dbContext = await CreateDbContextAsync(cancellationToken);
-        int result = await dbContext.Jobs!.Where(job => job.Id == id && job.Status == JobStatus.Queued).ExecuteUpdateAsync(entity => entity.SetProperty(x => x.Status, JobStatus.Executing), cancellationToken);
+        int result = await dbContext.Jobs!.Where(job => job.Id == id && job.Status == JobStatus.Queued)
+           .ExecuteUpdateAsync(entity => entity.SetProperty(x => x.Status, JobStatus.Executing).SetProperty(x => x.WhenStarted, DateTimeOffset.UtcNow), cancellationToken);
+
         return result > 0;
     }
 
