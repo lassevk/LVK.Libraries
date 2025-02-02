@@ -14,13 +14,4 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
-
-    public static IServiceCollection AddMemoryJobStorage(this IServiceCollection services)
-    {
-        _ = services ?? throw new ArgumentNullException(nameof(services));
-
-        services.AddSingleton<IJobStorage, MemoryJobStorage>();
-
-        return services;
-    }
 }

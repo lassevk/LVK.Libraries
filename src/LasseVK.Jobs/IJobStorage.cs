@@ -1,6 +1,6 @@
 ﻿namespace LasseVK.Jobs;
 
-internal interface IJobStorage
+public interface IJobStorage
 {
     Task<bool> JobExistsAsync(string id, CancellationToken cancellationToken);
     Task QueueJobAsync(Job job, IEnumerable<string> dependsOnJobIds, CancellationToken cancellationToken);

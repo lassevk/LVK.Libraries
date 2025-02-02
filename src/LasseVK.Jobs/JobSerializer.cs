@@ -7,7 +7,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace LasseVK.Jobs;
 
-internal static class JobSerializer
+public static class JobSerializer
 {
     private static readonly JsonSerializerOptions _jsonSerializerOptions;
     private static readonly Dictionary<Type, PropertyInfo[]> _dependencyProperties = new();

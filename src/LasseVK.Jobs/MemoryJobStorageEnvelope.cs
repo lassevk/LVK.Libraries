@@ -11,10 +11,3 @@ internal class MemoryJobStorageEnvelope
 
     public JobStatus Status { get; set; } = JobStatus.Queued;
 }
-
-internal enum JobStatus
-{
-    Queued,
-    Executing,
-    Completed,
-}

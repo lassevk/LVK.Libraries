@@ -5,12 +5,14 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <UserSecretsId>d2a7937d-3a95-4a3f-99af-8a94f74cdc33</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\LasseVK.Bootstrapping\LasseVK.Bootstrapping.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Core\LasseVK.Core.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Events\LasseVK.Events.csproj" />
+      <ProjectReference Include="..\..\src\LasseVK.Jobs.PostgreSQL\LasseVK.Jobs.PostgreSQL.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Jobs\LasseVK.Jobs.csproj" />
     </ItemGroup>
 
@@ -30,6 +32,13 @@
       <None Update="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
 
 </Project>

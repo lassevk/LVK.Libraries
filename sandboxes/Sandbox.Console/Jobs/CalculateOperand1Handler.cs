@@ -8,6 +8,7 @@ public class CalculateOperand1Handler : IJobHandler<CalculateOperand1Job>
     {
         await Task.Delay(1000, cancellationToken);
         job.Operand = 17;
+        System.Console.WriteLine("CalculateOperand1Handler.HandleAsync executed");
         System.Console.WriteLine($"Operand 1 = {job.Operand}");
     }
 }
