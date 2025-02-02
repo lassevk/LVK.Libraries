@@ -3,8 +3,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 
-using Microsoft.VisualBasic.CompilerServices;
-
 namespace LasseVK.Jobs;
 
 public static class JobSerializer
@@ -39,7 +37,7 @@ public static class JobSerializer
 
                             foreach (Type derivedType in derivedTypes)
                             {
-                                GetIdentifierAndGroup(derivedType, out string identifier, out string group);
+                                GetIdentifier(derivedType, out string identifier);
                                 item.PolymorphismOptions.DerivedTypes.Add(new JsonDerivedType(derivedType, identifier));
                             }
                         }
@@ -62,23 +60,21 @@ public static class JobSerializer
 
     public static SerializedJob Serialize(Job job)
     {
-        GetIdentifierAndGroup(job.GetType(), out string identifier, out string group);
+        GetIdentifier(job.GetType(), out string identifier);
 
         string json = JsonSerializer.Serialize(job, _jsonSerializerOptions);
-        return new SerializedJob { Json = json, Identifier = identifier, Group = group };
+        return new SerializedJob { Json = json, Identifier = identifier, Group = job.Group };
     }
 
-    private static void GetIdentifierAndGroup(Type jobType, out string identifier, out string group)
+    private static void GetIdentifier(Type jobType, out string identifier)
     {
         if (jobType.GetCustomAttribute<JobIdentifierAttribute>() is { } identifierAttribute)
         {
             identifier = identifierAttribute.Identifier;
-            group = identifierAttribute.Group ?? "";
             return;
         }
 
         identifier = jobType.FullName!;
-        group = "";
     }
 
     public static Job Deserialize(SerializedJob envelopeJob, string jobId)

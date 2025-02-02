@@ -92,6 +92,11 @@ internal class MemoryJobStorage : IJobStorage
         return Task.CompletedTask;
     }
 
+    public Task<int> CountExecutingJobsInGroupAsync(string group, CancellationToken cancellationToken)
+    {
+        return Task.FromResult(_jobsById.Values.Count(envelope => envelope.Status == JobStatus.Executing && (envelope.Job.Group ?? "") == group));
+    }
+
     public Task<List<string>> GetPendingJobGroupsAsync(CancellationToken cancellationToken)
     {
         return Task.FromResult(GetPendingJobEnvelopes().Select(envelope => envelope.Job.Group).Distinct().ToList());
@@ -118,17 +123,21 @@ internal class MemoryJobStorage : IJobStorage
         }
     }
 
-    public async Task<Job?> GetFirstPendingJobInGroupAsync(string group, CancellationToken cancellationToken)
+    public async Task<List<Job>> GetFirstPendingJobsInGroupAsync(string group, int amount, CancellationToken cancellationToken)
     {
-        MemoryJobStorageEnvelope? envelope = GetPendingJobEnvelopes().FirstOrDefault(envelope => envelope.Job.Group == group && envelope.Status == JobStatus.Queued);
-        if (envelope is null)
+        var envelopes = GetPendingJobEnvelopes().Where(envelope => envelope.Job.Group == group && envelope.Status == JobStatus.Queued).OrderBy(envelope => envelope.Id).Take(amount).ToList();
+
+        var result = new List<Job>();
+        foreach (MemoryJobStorageEnvelope envelope in envelopes)
         {
-            return null;
+            Job? job = await HydrateEnvelopeToJobAsync(envelope, cancellationToken);
+            if (job is not null)
+            {
+                result.Add(job);
+            }
         }
 
-        Job job = await HydrateEnvelopeToJobAsync(envelope, cancellationToken) ?? throw new InvalidOperationException($"Could not deserialize job {envelope.Id}");
-
-        return job;
+        return result;
     }
 
     private async Task<Job?> HydrateEnvelopeToJobAsync(MemoryJobStorageEnvelope envelope, CancellationToken cancellationToken)

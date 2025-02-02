@@ -13,6 +13,9 @@ public abstract class Job
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ExceptionSnapshot? Exception { get; internal set; }
 
+    [JsonIgnore]
+    public virtual string Group => "";
+
     public void EnsureSuccess()
     {
         if (Exception != null)

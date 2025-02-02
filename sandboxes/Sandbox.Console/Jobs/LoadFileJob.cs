@@ -9,6 +9,8 @@ public class LoadFileJob : Job
 {
     public required string FilePath { get; init; }
 
+    public override string Group => "LOAD";
+
     public byte[]? Contents { get; set; }
 }
 

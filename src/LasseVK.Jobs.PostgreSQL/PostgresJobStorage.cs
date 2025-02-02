@@ -72,15 +72,25 @@ internal class PostgresJobStorage : IJobStorage
         return groups;
     }
 
-    public async Task<Job?> GetFirstPendingJobInGroupAsync(string group, CancellationToken cancellationToken)
+    public async Task<List<Job>> GetFirstPendingJobsInGroupAsync(string group, int amount, CancellationToken cancellationToken)
     {
         await using PostgresDbContext dbContext = await CreateDbContextAsync(cancellationToken);
 
-        JobEntity? entity = await dbContext.Jobs!.Where(job => (job.Group ?? "") == group && job.Status == JobStatus.Queued)
-           .Where(job => job.DependsOn!.All(dependency => dependency.Status == JobStatus.Completed)).OrderBy(job => job.Id).FirstOrDefaultAsync(cancellationToken);
+        List<JobEntity> entities = await dbContext.Jobs!.Where(job => (job.Group ?? "") == group && job.Status == JobStatus.Queued)
+           .Where(job => job.DependsOn!.All(dependency => dependency.Status == JobStatus.Completed)).OrderBy(job => job.Id)
+           .Take(amount).ToListAsync(cancellationToken);
 
-        Job? job = await HydrateEnvelopeToJobAsync(dbContext, entity!, cancellationToken);
-        return job;
+        var result = new List<Job>();
+        foreach (JobEntity entity in entities)
+        {
+            Job? job = await HydrateEnvelopeToJobAsync(dbContext, entity, cancellationToken);
+            if (job is not null)
+            {
+                result.Add(job);
+            }
+        }
+
+        return result;
     }
 
     private async Task<Job?> HydrateEnvelopeToJobAsync(PostgresDbContext dbContext, JobEntity entity, CancellationToken cancellationToken)
@@ -165,5 +175,12 @@ internal class PostgresJobStorage : IJobStorage
         }
 
         await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<int> CountExecutingJobsInGroupAsync(string group, CancellationToken cancellationToken)
+    {
+        await using PostgresDbContext dbContext = await CreateDbContextAsync(cancellationToken);
+
+        return await dbContext.Jobs!.Where(job => job.Group == group && job.Status == JobStatus.Executing).CountAsync(cancellationToken);
     }
 }

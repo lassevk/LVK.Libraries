@@ -9,6 +9,4 @@ public class JobIdentifierAttribute : Attribute
     }
 
     public string Identifier { get; }
-
-    public string? Group { get; set; }
 }

@@ -6,4 +6,7 @@ public interface IJobManager
         where T : Job;
 
     Task HandleAllJobsAsync(CancellationToken cancellationToken);
+
+    Task ConfigureGroupAsync(string groupName, Action<JobGroup> configure, CancellationToken cancellationToken);
+    Task<JobGroup?> GetConfiguratinAsync(string groupName, CancellationToken cancellationToken);
 }

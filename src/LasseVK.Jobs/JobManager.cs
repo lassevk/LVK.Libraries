@@ -28,24 +28,50 @@ internal class JobManager : IJobManager
 
     public async Task HandleAllJobsAsync(CancellationToken cancellationToken)
     {
-        while (true)
+        bool anyHandled = true;
+        while (!cancellationToken.IsCancellationRequested)
         {
+            if (!anyHandled)
+            {
+                await Task.Delay(1000, cancellationToken);
+            }
+
+            anyHandled = false;
+
             List<string> groupsWithPendingJobs = await _jobStorage.GetPendingJobGroupsAsync(cancellationToken);
 
             foreach (string group in groupsWithPendingJobs)
             {
-                // TODO: Check if group is full
-
-                Job? job = await _jobStorage.GetFirstPendingJobInGroupAsync(group, cancellationToken);
-                if (job is null)
+                int roomInGroup = 100;
+                if (group != "")
                 {
-                    continue;
+                    _logger.LogInformation("Checking capacity of group {Group}", group);
+                    JobGroup? groupConfiguration = await _jobStorage.GetJobGroupAsync(group, cancellationToken);
+                    if (groupConfiguration is { MaxConcurrentJobs: > 0 })
+                    {
+                        int executingJobs = await _jobStorage.CountExecutingJobsInGroupAsync(group, cancellationToken);
+                        if (executingJobs >= groupConfiguration.MaxConcurrentJobs)
+                        {
+                            _logger.LogInformation("Group {Group} is full, skipping for now", group);
+                            continue;
+                        }
+
+                        roomInGroup = groupConfiguration.MaxConcurrentJobs.Value - executingJobs;
+                        _logger.LogInformation("Group {Group} has {RoomInGroup} capacity available", group, roomInGroup);
+                    }
                 }
 
-                _logger.LogInformation("Handling job {Job}", job);
-                if (await _jobStorage.MarkAsExecuting(job.Id, cancellationToken))
+                List<Job> jobs = await _jobStorage.GetFirstPendingJobsInGroupAsync(group, roomInGroup, cancellationToken);
+
+                _logger.LogInformation("Got {JobCount} jobs from group {Group}", jobs.Count, group);
+                foreach (Job job in jobs)
                 {
-                    _ = HandleJobAsync(job, cancellationToken).ConfigureAwait(false);
+                    _logger.LogInformation("Handling job {Job}", job);
+                    if (await _jobStorage.MarkAsExecuting(job.Id, cancellationToken))
+                    {
+                        anyHandled = true;
+                        _ = HandleJobAsync(job, cancellationToken).ConfigureAwait(false);
+                    }
                 }
             }
         }
@@ -154,4 +180,13 @@ internal class JobManager : IJobManager
         _dependencyProperties[type] = result;
         return result;
     }
+
+    public async Task ConfigureGroupAsync(string groupName, Action<JobGroup> configure, CancellationToken cancellationToken)
+    {
+        JobGroup group = await _jobStorage.GetJobGroupAsync(groupName, cancellationToken) ?? new JobGroup { Name = groupName };
+        configure(group);
+        await _jobStorage.SetJobGroupAsync(group, cancellationToken);
+    }
+
+    public async Task<JobGroup?> GetConfiguratinAsync(string groupName, CancellationToken cancellationToken) => await _jobStorage.GetJobGroupAsync(groupName, cancellationToken);
 }
