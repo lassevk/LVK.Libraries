@@ -18,9 +18,7 @@ public class ModuleBootstrapper : IModuleBootstrapper
         builder.Bootstrap(new LasseVK.Jobs.ModuleBootstrapper());
         builder.Bootstrap(new LasseVK.Jobs.PostgreSQL.ModuleBootstrapper());
 
-        builder.Services.AddJobHandler<CalculateOperand1Job, CalculateOperand1Handler>();
-        builder.Services.AddJobHandler<CalculateOperand2Job, CalculateOperand2Handler>();
-        builder.Services.AddJobHandler<CalculateSumJob, CalculateSumJobHandler>();
+        builder.Services.AddJobHandlers<Program>();
 
         string connectionString = builder.Configuration.GetConnectionString("Jobs") ?? throw new InvalidOperationException("No jobs connection string");
         builder.AddPostgresJobStorage(connectionString);

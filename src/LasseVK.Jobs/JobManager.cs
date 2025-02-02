@@ -34,6 +34,8 @@ internal class JobManager : IJobManager
 
             foreach (string group in groupsWithPendingJobs)
             {
+                // TODO: Check if group is full
+
                 Job? job = await _jobStorage.GetFirstPendingJobInGroupAsync(group, cancellationToken);
                 if (job is null)
                 {
@@ -55,9 +57,11 @@ internal class JobManager : IJobManager
         using IServiceScope serviceScope = _serviceProvider.CreateScope();
 
         Type handlerType = typeof(IJobHandler<>).MakeGenericType(job.GetType());
-        object handler = serviceScope.ServiceProvider.GetRequiredService(handlerType);
         try
         {
+            _logger.LogInformation("Getting handler for job {Job}", job);
+            object handler = serviceScope.ServiceProvider.GetRequiredService(handlerType);
+
             _logger.LogInformation("Executing job {Job}", job);
             await ((dynamic)handler).HandleAsync((dynamic)job, cancellationToken);
             _logger.LogInformation("Job {Job} completed successfully", job);

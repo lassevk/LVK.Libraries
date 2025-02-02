@@ -18,13 +18,14 @@ public class Application : IConsoleApplication
     {
         await Task.Yield();
 
-        var sumJob = new CalculateSumJob
+        foreach (string file in Directory.EnumerateFiles(@"D:\Temp", "*.*", SearchOption.AllDirectories))
         {
-            Operand1 = new CalculateOperand1Job(),
-            Operand2 = new CalculateOperand2Job(),
-        };
+            var load = new LoadFileJob { FilePath = file };
+            var checksum = new ChecksumJob { File = load };
+            var writeSidecarJob = new WriteSidecarFileJob { Checksum = checksum };
 
-        await _jobManager.SubmitAsync(sumJob, cancellationToken);
+            await _jobManager.SubmitAsync(writeSidecarJob, cancellationToken);
+        }
 
         await _jobManager.HandleAllJobsAsync(cancellationToken);
 

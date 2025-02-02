@@ -76,7 +76,7 @@ internal class PostgresJobStorage : IJobStorage
     {
         await using PostgresDbContext dbContext = await CreateDbContextAsync(cancellationToken);
 
-        JobEntity? entity = await dbContext.Jobs!.Include(entity => entity.DependsOn).Where(job => (job.Group ?? "") == group && job.Status == JobStatus.Queued)
+        JobEntity? entity = await dbContext.Jobs!.Where(job => (job.Group ?? "") == group && job.Status == JobStatus.Queued)
            .Where(job => job.DependsOn!.All(dependency => dependency.Status == JobStatus.Completed)).OrderBy(job => job.Id).FirstOrDefaultAsync(cancellationToken);
 
         Job? job = await HydrateEnvelopeToJobAsync(dbContext, entity!, cancellationToken);
@@ -93,10 +93,12 @@ internal class PostgresJobStorage : IJobStorage
         };
         Job job = JobSerializer.Deserialize(serialized, entity.Id);
 
-        if (entity.DependsOn?.Count > 0)
+        List<JobEntity> dependencyEntities = await dbContext.Jobs!.Where(dependency => dependency.DependsOnMe!.Contains(entity)).ToListAsync(cancellationToken);
+
+        if (dependencyEntities.Count > 0)
         {
             var dependencies = new List<Job>();
-            foreach (JobEntity dependencyEntity in entity.DependsOn)
+            foreach (JobEntity dependencyEntity in dependencyEntities)
             {
                 Job? depencency = await HydrateEnvelopeToJobAsync(dbContext, dependencyEntity, cancellationToken);
                 if (depencency is null)
@@ -134,5 +136,34 @@ internal class PostgresJobStorage : IJobStorage
         await using PostgresDbContext dbContext = await CreateDbContextAsync(cancellationToken);
         int result = await dbContext.Jobs!.Where(job => job.Id == id && job.Status == JobStatus.Queued).ExecuteUpdateAsync(entity => entity.SetProperty(x => x.Status, JobStatus.Executing), cancellationToken);
         return result > 0;
+    }
+
+    public async Task<JobGroup?> GetJobGroupAsync(string groupName, CancellationToken cancellationToken)
+    {
+        await using PostgresDbContext dbContext = await CreateDbContextAsync(cancellationToken);
+        JobGroupEntity? group = await dbContext.JobGroups!.FirstOrDefaultAsync(jg => jg.Name == groupName, cancellationToken);
+        if (group is null)
+        {
+            return null;
+        }
+
+        return new JobGroup { Name = group.Name, MaxConcurrentJobs = group.MaxConcurrentJobs };
+    }
+
+    public async Task SetJobGroupAsync(JobGroup group, CancellationToken cancellationToken)
+    {
+        await using PostgresDbContext dbContext = await CreateDbContextAsync(cancellationToken);
+
+        JobGroupEntity? entity = await dbContext.JobGroups!.FirstOrDefaultAsync(jg => jg.Name == group.Name, cancellationToken);
+        if (entity == null)
+        {
+            dbContext.JobGroups!.Add(new JobGroupEntity { Name = group.Name, MaxConcurrentJobs = group.MaxConcurrentJobs });
+        }
+        else
+        {
+            entity.MaxConcurrentJobs = group.MaxConcurrentJobs;
+        }
+
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 }

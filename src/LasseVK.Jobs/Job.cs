@@ -12,4 +12,12 @@ public abstract class Job
     [JsonPropertyName("ex")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ExceptionSnapshot? Exception { get; internal set; }
+
+    public void EnsureSuccess()
+    {
+        if (Exception != null)
+        {
+            throw new InvalidOperationException("Job failed");
+        }
+    }
 }

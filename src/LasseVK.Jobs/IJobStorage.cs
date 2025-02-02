@@ -8,4 +8,7 @@ public interface IJobStorage
     Task<Job?> GetFirstPendingJobInGroupAsync(string group, CancellationToken cancellationToken);
     Task MarkAsCompleted(Job job, CancellationToken cancellationToken);
     Task<bool> MarkAsExecuting(string id, CancellationToken cancellationToken);
+
+    Task<JobGroup?> GetJobGroupAsync(string groupName, CancellationToken cancellationToken);
+    Task SetJobGroupAsync(JobGroup group, CancellationToken cancellationToken);
 }

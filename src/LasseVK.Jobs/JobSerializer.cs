@@ -65,7 +65,6 @@ public static class JobSerializer
         GetIdentifierAndGroup(job.GetType(), out string identifier, out string group);
 
         string json = JsonSerializer.Serialize(job, _jsonSerializerOptions);
-        Console.WriteLine(json);
         return new SerializedJob { Json = json, Identifier = identifier, Group = group };
     }
 
