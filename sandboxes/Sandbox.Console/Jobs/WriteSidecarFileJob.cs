@@ -1,8 +1,4 @@
-﻿using System.Text.Json;
-
-using LasseVK.Jobs;
-
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
+﻿using LasseVK.Jobs;
 
 namespace Sandbox.Console.Jobs;
 

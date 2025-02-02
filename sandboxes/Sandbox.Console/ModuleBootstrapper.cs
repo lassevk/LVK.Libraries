@@ -5,8 +5,6 @@ using LasseVK.Jobs.PostgreSQL;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-using Sandbox.Console.Jobs;
-
 namespace Sandbox.Console;
 
 public class ModuleBootstrapper : IModuleBootstrapper

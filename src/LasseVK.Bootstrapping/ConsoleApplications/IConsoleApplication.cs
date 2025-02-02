@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-
-namespace LasseVK.Bootstrapping.ConsoleApplications;
+﻿namespace LasseVK.Bootstrapping.ConsoleApplications;
 
 public interface IConsoleApplication
 {
