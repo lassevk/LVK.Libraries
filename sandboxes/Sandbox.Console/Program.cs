@@ -1,8 +1,6 @@
 ﻿using LasseVK.Bootstrapping;
 
 using Microsoft.Extensions.Hosting;
-using LasseVK.Jobs.PostgreSQL;
-
 using Sandbox.Console;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
@@ -14,8 +12,6 @@ foreach (string filePath in Directory.GetFiles(@"D:\Temp", "*.checksum"))
 {
     File.Delete(filePath);
 }
-
-await host.DropAllJobsAsync();
 
 await host.InitializeAsync();
 await host.RunAsConsoleApplicationAsync<Application>();

@@ -13,9 +13,6 @@ public class ModuleBootstrapper : IModuleBootstrapper
     {
         builder.Configuration.AddUserSecrets<Program>();
 
-        builder.Bootstrap(new LasseVK.Jobs.ModuleBootstrapper());
-        builder.Bootstrap(new LasseVK.Jobs.PostgreSQL.ModuleBootstrapper());
-
         builder.Services.AddJobHandlers<Program>();
 
         string connectionString = builder.Configuration.GetConnectionString("Jobs") ?? throw new InvalidOperationException("No jobs connection string");
