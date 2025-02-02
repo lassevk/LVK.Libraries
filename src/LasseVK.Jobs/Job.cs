@@ -23,4 +23,6 @@ public abstract class Job
             throw new InvalidOperationException("Job failed");
         }
     }
+
+    public override string ToString() => $"{GetType().Name}#{Id}";
 }

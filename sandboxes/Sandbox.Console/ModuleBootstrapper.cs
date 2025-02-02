@@ -19,6 +19,9 @@ public class ModuleBootstrapper : IModuleBootstrapper
         builder.Services.AddJobHandlers<Program>();
 
         string connectionString = builder.Configuration.GetConnectionString("Jobs") ?? throw new InvalidOperationException("No jobs connection string");
-        builder.AddPostgresJobStorage(connectionString);
+        builder.AddJobManager(configuration =>
+        {
+            configuration.UsePostgreSql(connectionString);
+        });
     }
 }

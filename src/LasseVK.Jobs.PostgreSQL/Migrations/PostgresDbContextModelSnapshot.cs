@@ -33,7 +33,7 @@ namespace LasseVK.Jobs.PostgreSQL.Migrations
 
                     b.HasIndex("DependsOnMeId");
 
-                    b.ToTable("JobEntityJobEntity");
+                    b.ToTable("JobEntityJobEntity", (string)null);
                 });
 
             modelBuilder.Entity("LasseVK.Jobs.PostgreSQL.JobEntity", b =>
@@ -65,23 +65,7 @@ namespace LasseVK.Jobs.PostgreSQL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("jobs");
-                });
-
-            modelBuilder.Entity("LasseVK.Jobs.PostgreSQL.JobGroupEntity", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)")
-                        .HasColumnName("name");
-
-                    b.Property<int?>("MaxConcurrentJobs")
-                        .HasColumnType("integer")
-                        .HasColumnName("max_jobs");
-
-                    b.HasKey("Name");
-
-                    b.ToTable("job_groups");
+                    b.ToTable("jobs", (string)null);
                 });
 
             modelBuilder.Entity("JobEntityJobEntity", b =>

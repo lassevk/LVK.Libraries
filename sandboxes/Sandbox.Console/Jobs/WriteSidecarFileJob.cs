@@ -5,6 +5,8 @@ namespace Sandbox.Console.Jobs;
 public class WriteSidecarFileJob : Job
 {
     public required ChecksumJob Checksum { get; init; }
+
+    public override string ToString() => $"{base.ToString()} {Checksum.File.FilePath}";
 }
 
 public class WriteSidecarFileJobHandler : IJobHandler<WriteSidecarFileJob>

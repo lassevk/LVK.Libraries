@@ -148,35 +148,6 @@ internal class PostgresJobStorage : IJobStorage
         return result > 0;
     }
 
-    public async Task<JobGroup?> GetJobGroupAsync(string groupName, CancellationToken cancellationToken)
-    {
-        await using PostgresDbContext dbContext = await CreateDbContextAsync(cancellationToken);
-        JobGroupEntity? group = await dbContext.JobGroups!.FirstOrDefaultAsync(jg => jg.Name == groupName, cancellationToken);
-        if (group is null)
-        {
-            return null;
-        }
-
-        return new JobGroup { Name = group.Name, MaxConcurrentJobs = group.MaxConcurrentJobs };
-    }
-
-    public async Task SetJobGroupAsync(JobGroup group, CancellationToken cancellationToken)
-    {
-        await using PostgresDbContext dbContext = await CreateDbContextAsync(cancellationToken);
-
-        JobGroupEntity? entity = await dbContext.JobGroups!.FirstOrDefaultAsync(jg => jg.Name == group.Name, cancellationToken);
-        if (entity == null)
-        {
-            dbContext.JobGroups!.Add(new JobGroupEntity { Name = group.Name, MaxConcurrentJobs = group.MaxConcurrentJobs });
-        }
-        else
-        {
-            entity.MaxConcurrentJobs = group.MaxConcurrentJobs;
-        }
-
-        await dbContext.SaveChangesAsync(cancellationToken);
-    }
-
     public async Task<int> CountExecutingJobsInGroupAsync(string group, CancellationToken cancellationToken)
     {
         await using PostgresDbContext dbContext = await CreateDbContextAsync(cancellationToken);

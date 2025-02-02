@@ -9,8 +9,6 @@ internal class MemoryJobStorage : IJobStorage
     private readonly Dictionary<string, List<string>> _forwardJobDependencies = new();
     private readonly Dictionary<string, List<string>> _backwardJobDependencies = new();
 
-    private readonly Dictionary<string, JobGroup> _jobGroups = new();
-
     public MemoryJobStorage(ILogger<MemoryJobStorage> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -76,18 +74,6 @@ internal class MemoryJobStorage : IJobStorage
 
         envelope.Status = JobStatus.Executing;
         return Task.FromResult(true);
-    }
-
-    public Task<JobGroup?> GetJobGroupAsync(string groupName, CancellationToken cancellationToken)
-    {
-        _jobGroups.TryGetValue(groupName, out JobGroup? jobGroup);
-        return Task.FromResult(jobGroup);
-    }
-
-    public Task SetJobGroupAsync(JobGroup group, CancellationToken cancellationToken)
-    {
-        _jobGroups[group.Name] = group;
-        return Task.CompletedTask;
     }
 
     public Task<int> CountExecutingJobsInGroupAsync(string group, CancellationToken cancellationToken)

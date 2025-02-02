@@ -18,8 +18,6 @@ public class Application : IConsoleApplication
     {
         await Task.Yield();
 
-        await _jobManager.ConfigureGroupAsync("LOAD", group => group.MaxConcurrentJobs = 1, cancellationToken);
-
         foreach (string file in Directory.EnumerateFiles(@"D:\Temp", "*.*", SearchOption.AllDirectories))
         {
             var load = new LoadFileJob { FilePath = file };

@@ -10,6 +10,8 @@ public class LoadFileJob : Job
     public override string Group => "LOAD";
 
     public byte[]? Contents { get; set; }
+
+    public override string ToString() => $"{base.ToString()} {FilePath}";
 }
 
 public class LoadFileJobHandler : IJobHandler<LoadFileJob>
@@ -18,7 +20,6 @@ public class LoadFileJobHandler : IJobHandler<LoadFileJob>
     {
         System.Console.WriteLine("executing: " + job.Id);
 
-        await Task.Delay(10000, cancellationToken);
         job.Contents = await File.ReadAllBytesAsync(job.FilePath, cancellationToken);
     }
 }
