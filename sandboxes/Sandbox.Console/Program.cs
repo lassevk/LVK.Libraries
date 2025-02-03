@@ -20,10 +20,5 @@ builder.AddJobManager(configuration =>
 
 IHost host = builder.Build();
 
-foreach (string filePath in Directory.GetFiles(@"/Users/lassevk/Temp", "*.checksum"))
-{
-    File.Delete(filePath);
-}
-
 await host.InitializeAsync();
 await host.RunAsConsoleApplicationAsync<Application>();

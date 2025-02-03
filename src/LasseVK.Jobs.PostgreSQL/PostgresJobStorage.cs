@@ -16,13 +16,23 @@ internal class PostgresJobStorage : IJobStorage
     private async Task<PostgresDbContext> CreateDbContextAsync(CancellationToken cancellationToken)
     {
         PostgresDbContext dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
+        bool isFirstTime = false;
         lock (_migrationLock)
         {
             if (!_isMigrated)
             {
                 _isMigrated = true;
                 dbContext.Database.Migrate();
+
+                isFirstTime = true;
             }
+        }
+
+        if (isFirstTime)
+        {
+            dbContext.JobLogs!.RemoveRange(dbContext.JobLogs);
+            dbContext.Jobs!.RemoveRange(dbContext.Jobs);
+            await dbContext.SaveChangesAsync(cancellationToken);
         }
 
         return dbContext;

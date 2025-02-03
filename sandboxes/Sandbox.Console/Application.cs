@@ -16,17 +16,17 @@ public class Application : IConsoleApplication
 
     public async Task<int> RunAsync(CancellationToken cancellationToken)
     {
-        await Task.Yield();
-
-        foreach (string file in Directory.EnumerateFiles(@"/Users/lassevk/Temp", "*.*", SearchOption.AllDirectories))
+        var job = new MainJob();
+        job.Dependencies.Add(new DependencyJob
         {
-            var load = new LoadFileJob { FilePath = file };
-            var checksum = new ChecksumJob { File = load };
-            var writeSidecarJob = new WriteSidecarFileJob { Checksum = checksum };
+            Counter = 1,
+        });
+        job.Dependencies.Add(new DependencyJob
+        {
+            Counter = 2,
+        });
 
-            await _jobManager.SubmitAsync(writeSidecarJob, cancellationToken);
-        }
-
+        await _jobManager.SubmitAsync(job, cancellationToken);
         await _jobManager.HandleAllJobsAsync(cancellationToken);
 
         return 0;

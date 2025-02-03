@@ -29,19 +29,4 @@
       </PackageReference>
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Update="Jobs\ChecksumJobHandler.cs">
-        <DependentUpon>ChecksumJob.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Jobs\LoadFileJobHandler.cs">
-        <DependentUpon>LoadFileJob.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Jobs\ReportDoneJobHandler.cs">
-        <DependentUpon>ReportDoneJob.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Jobs\WriteSidecarFileJobHandler.cs">
-        <DependentUpon>WriteSidecarFileJob.cs</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
 </Project>

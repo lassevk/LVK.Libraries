@@ -12,8 +12,6 @@ internal class JobManager : IJobManager
     private readonly IServiceProvider _serviceProvider;
     private readonly JobManagerOptions _options;
 
-    private readonly Dictionary<Type, List<PropertyInfo>> _dependencyProperties = new();
-
     public JobManager(ILogger<JobManager> logger, IJobStorage jobStorage, IServiceProvider serviceProvider,
             JobManagerOptions options)
     {
@@ -95,23 +93,8 @@ internal class JobManager : IJobManager
 
     private bool JobConfigurationIsValid(Job job)
     {
-        if (!_dependencyProperties.TryGetValue(job.GetType(), out List<PropertyInfo>? properties))
-        {
-            return true;
-        }
-
-        foreach (PropertyInfo property in properties)
-        {
-            if (property.GetValue(job) is Job dependency)
-            {
-                if (!JobConfigurationIsValid(dependency) || dependency.Exception is not null)
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        List<Job> dependencies = JobSerializer.GetDependencies(job);
+        return dependencies.All(dependency => dependency.Exception == null && JobConfigurationIsValid(dependency));
     }
 
     private async Task<int> GetAvailableCapacityInGroup(string group, CancellationToken cancellationToken)
@@ -207,7 +190,7 @@ internal class JobManager : IJobManager
 
     private async Task SubmitAsync(Job job, CancellationToken cancellationToken)
     {
-        List<Job> dependencies = GetDependencies(job);
+        List<Job> dependencies = JobSerializer.GetDependencies(job);
 
         foreach (Job dependency in dependencies)
         {
@@ -226,54 +209,5 @@ internal class JobManager : IJobManager
         {
             await SubmitAsync(job, cancellationToken);
         }
-    }
-
-    private List<Job> GetDependencies(Job job)
-    {
-        var result = new List<Job>();
-        List<PropertyInfo> properties = GetDependencyProperties(job.GetType());
-
-        foreach (PropertyInfo property in properties)
-        {
-            if (property.GetValue(job) is Job jobValue)
-            {
-                result.Add(jobValue);
-            }
-        }
-
-        return result;
-    }
-
-    private List<PropertyInfo> GetDependencyProperties(Type type)
-    {
-        if (_dependencyProperties.TryGetValue(type, out List<PropertyInfo>? result))
-        {
-            return result;
-        }
-
-        result = new List<PropertyInfo>();
-
-        foreach (PropertyInfo property in type.GetProperties())
-        {
-            if (property is not { CanRead: true, CanWrite: true })
-            {
-                continue;
-            }
-
-            if (property.GetIndexParameters().Length > 0)
-            {
-                continue;
-            }
-
-            if (!property.PropertyType.IsAssignableTo(typeof(Job)))
-            {
-                continue;
-            }
-
-            result.Add(property);
-        }
-
-        _dependencyProperties[type] = result;
-        return result;
     }
 }

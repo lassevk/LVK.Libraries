@@ -16,7 +16,8 @@ public static class JobSerializer
         {
             TypeInfoResolver = new DefaultJsonTypeInfoResolver
             {
-                Modifiers = {
+                Modifiers =
+                {
                     item =>
                     {
                         if (item.Type == typeof(Job))
@@ -24,9 +25,7 @@ public static class JobSerializer
                             // Ensure we can serialize descendants without having explicit polymorphism attributes in pplace
                             item.PolymorphismOptions = new JsonPolymorphismOptions
                             {
-                                TypeDiscriminatorPropertyName = "$type",
-                                IgnoreUnrecognizedTypeDiscriminators = true,
-                                UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FailSerialization,
+                                TypeDiscriminatorPropertyName = "$type", IgnoreUnrecognizedTypeDiscriminators = true, UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FailSerialization,
                             };
 
                             IEnumerable<Type> derivedTypes =
@@ -50,6 +49,11 @@ public static class JobSerializer
                                 {
                                     item.Properties.Remove(property);
                                 }
+                                else if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(List<>)
+                                                                             && property.PropertyType.GetGenericArguments()[0].IsSubclassOf(typeof(Job)))
+                                {
+                                    item.Properties.Remove(property);
+                                }
                             }
                         }
                     },
@@ -63,7 +67,10 @@ public static class JobSerializer
         GetIdentifier(job.GetType(), out string identifier);
 
         string json = JsonSerializer.Serialize(job, _jsonSerializerOptions);
-        return new SerializedJob { Json = json, Identifier = identifier, Group = job.Group };
+        return new SerializedJob
+        {
+            Json = json, Identifier = identifier, Group = job.Group,
+        };
     }
 
     private static void GetIdentifier(Type jobType, out string identifier)
@@ -89,19 +96,68 @@ public static class JobSerializer
         return job;
     }
 
-    public static void PopulateDependencies(Job job, List<Job> dependencies)
+    public static List<Job> GetDependencies(Job job)
     {
-        var lookup = dependencies.ToDictionary(x => x.GetType());
+        var result = new List<Job>();
 
         PropertyInfo[] properties = GetDependencyProperties(job.GetType());
         foreach (PropertyInfo property in properties)
         {
-            if (!lookup.TryGetValue(property.PropertyType, out Job? dependency))
+            if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
             {
-                throw new InvalidOperationException($"Could not find dependency for property {property.Name}");
+                if (property.GetValue(job) is IEnumerable<Job> collection)
+                {
+                    result.AddRange(collection);
+                }
             }
+            else
+            {
+                if (property.GetValue(job) is Job dependency)
+                {
+                    result.Add(dependency);
+                }
+            }
+        }
 
-            property.SetValue(job, dependency);
+        return result;
+    }
+
+    public static void PopulateDependencies(Job job, List<Job> dependencies)
+    {
+        ILookup<Type, Job> lookup = dependencies.ToLookup(x => x.GetType());
+
+        PropertyInfo[] properties = GetDependencyProperties(job.GetType());
+        foreach (PropertyInfo property in properties)
+        {
+            if (property.PropertyType.IsSubclassOf(typeof(Job)))
+            {
+                Job? dependency = lookup[property.PropertyType].SingleOrDefault();
+
+                if (dependency is null)
+                {
+                    throw new InvalidOperationException($"Could not find dependency for property {property.Name}");
+                }
+
+                property.SetValue(job, dependency);
+            }
+            else if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(List<>)
+                                                         && property.PropertyType.GetGenericArguments()[0].IsSubclassOf(typeof(Job)))
+            {
+                var propertyDependencies = lookup[property.PropertyType.GetGenericArguments()[0]].ToList();
+                object? listValue = property.GetValue(job);
+                if (propertyDependencies.Count > 0)
+                {
+                    if (listValue is null)
+                    {
+                        throw new InvalidCastException($"Unable to populate dependencies for {property.Name}, no list instance");
+                    }
+
+                    foreach (Job dependency in propertyDependencies)
+                    {
+                        ((dynamic)listValue).Add((dynamic)dependency);
+                    }
+                }
+            }
         }
     }
 
@@ -115,22 +171,20 @@ public static class JobSerializer
         var temp = new List<PropertyInfo>();
         foreach (PropertyInfo property in jobType.GetProperties())
         {
-            if (property is not { CanRead: true, CanWrite: true })
-            {
-                continue;
-            }
-
             if (property.GetIndexParameters().Length > 0)
             {
                 continue;
             }
 
-            if (!property.PropertyType.IsSubclassOf(typeof(Job)))
+            if (property.PropertyType.IsSubclassOf(typeof(Job)) && property is { CanRead: true, CanWrite: true })
             {
-                continue;
+                temp.Add(property);
             }
-
-            temp.Add(property);
+            else if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(List<>)
+                                                         && property.PropertyType.GetGenericArguments()[0].IsSubclassOf(typeof(Job)))
+            {
+                temp.Add(property);
+            }
         }
 
         properties = temp.ToArray();
