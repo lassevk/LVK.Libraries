@@ -6,4 +6,30 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Compile Update="AsyncActionSubscriber.cs">
+        <DependentUpon>IEventSubscriber.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ActionSubscriber.cs">
+        <DependentUpon>IEventSubscriber.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Events.cs">
+        <DependentUpon>IEvents.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\LasseVK.Core\LasseVK.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>LasseVK.Events.Tests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+    
 </Project>
