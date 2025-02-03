@@ -2,6 +2,7 @@ using LasseVK.Jobs;
 
 namespace Sandbox.Console.Jobs;
 
+[JobIdentifier("main")]
 public class MainJob : Job
 {
     public List<DependencyJob> Dependencies { get; } = new();

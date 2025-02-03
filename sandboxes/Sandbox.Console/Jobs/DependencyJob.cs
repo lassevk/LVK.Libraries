@@ -2,6 +2,7 @@ using LasseVK.Jobs;
 
 namespace Sandbox.Console.Jobs;
 
+[JobIdentifier("dep")]
 public class DependencyJob : Job
 {
     public required int Counter { get; init; }

@@ -56,7 +56,6 @@ internal class PostgresJobStorage : IJobStorage
         var entity = new JobEntity
         {
             Id = job.Id,
-            Identifier = serialized.Identifier,
             Group = serialized.Group,
             JobJson = serialized.Json,
             DependsOn = dependencies,
@@ -106,7 +105,7 @@ internal class PostgresJobStorage : IJobStorage
     {
         var serialized = new SerializedJob
         {
-            Identifier = entity.Identifier, Group = entity.Group ?? "", Json = entity.JobJson,
+            Group = entity.Group ?? "", Json = entity.JobJson,
         };
 
         Job job = JobSerializer.Deserialize(serialized, entity.Id);

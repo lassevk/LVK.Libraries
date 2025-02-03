@@ -39,9 +39,13 @@ public static class JobSerializer
                                 GetIdentifier(derivedType, out string identifier);
                                 item.PolymorphismOptions.DerivedTypes.Add(new JsonDerivedType(derivedType, identifier));
                             }
+
+                            item.Properties.Remove(item.Properties.First(p => p.Name == "id"));
                         }
                         else if (item.Type.IsSubclassOf(typeof(Job)))
                         {
+                            item.Properties.Remove(item.Properties.First(p => p.Name == "id"));
+
                             // Remove job dependencies from serialized object
                             foreach (JsonPropertyInfo property in item.Properties.ToArray())
                             {
@@ -69,7 +73,7 @@ public static class JobSerializer
         string json = JsonSerializer.Serialize(job, _jsonSerializerOptions);
         return new SerializedJob
         {
-            Json = json, Identifier = identifier, Group = job.Group,
+            Json = json, Group = job.Group,
         };
     }
 

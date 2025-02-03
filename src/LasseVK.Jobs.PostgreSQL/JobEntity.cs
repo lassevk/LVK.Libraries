@@ -11,10 +11,6 @@ internal class JobEntity
     [Column("id")]
     public required string Id { get; init; }
 
-    [Column("identifier")]
-    [MaxLength(256)]
-    public required string Identifier { get; init; }
-
     [Column("group")]
     [MaxLength(256)]
     public required string? Group { get; init; }
