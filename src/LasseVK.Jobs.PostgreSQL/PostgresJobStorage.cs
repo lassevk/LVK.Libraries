@@ -57,7 +57,7 @@ internal class PostgresJobStorage : IJobStorage
         {
             Id = job.Id,
             Group = serialized.Group,
-            JobJson = serialized.Json,
+            Json = serialized.Json,
             DependsOn = dependencies,
             Status = JobStatus.Queued, };
 
@@ -105,7 +105,7 @@ internal class PostgresJobStorage : IJobStorage
     {
         var serialized = new SerializedJob
         {
-            Group = entity.Group ?? "", Json = entity.JobJson,
+            Group = entity.Group ?? "", Json = entity.Json,
         };
 
         Job job = JobSerializer.Deserialize(serialized, entity.Id);
@@ -143,7 +143,7 @@ internal class PostgresJobStorage : IJobStorage
         }
 
         SerializedJob serialized = JobSerializer.Serialize(job);
-        entity.JobJson = serialized.Json;
+        entity.Json = serialized.Json;
         entity.Status = JobStatus.Completed;
         entity.WhenCompleted = DateTime.UtcNow;
 

@@ -18,4 +18,9 @@
       <Folder Include="Migrations\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Migrations\PostgresDbContextModelSnapshot.cs" />
+      <Compile Remove="Migrations\20250203121240_Initial.Designer.cs" />
+    </ItemGroup>
+
 </Project>

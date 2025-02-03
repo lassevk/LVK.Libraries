@@ -5,11 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LasseVK.Jobs.PostgreSQL;
 
+[Table("logs")]
 [Index(nameof(JobId), Name = "logs_job_id")]
 internal class JobLogEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Column("id")]
     public long Id { get; init; }
 
     [Column("job")]

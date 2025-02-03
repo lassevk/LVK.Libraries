@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LasseVK.Jobs.PostgreSQL;
 
+[Table("jobs")]
 internal class JobEntity
 {
     [Key]
@@ -14,8 +15,8 @@ internal class JobEntity
     [MaxLength(256)]
     public required string? Group { get; init; }
 
-    [Column("json", TypeName = "TEXT")]
-    public required string JobJson { get; set; }
+    [Column("json", TypeName = "json")]
+    public required string Json { get; set; }
 
     [Column("status")]
     public required JobStatus Status { get; set; }

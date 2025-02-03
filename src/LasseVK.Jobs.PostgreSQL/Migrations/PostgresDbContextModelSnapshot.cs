@@ -22,21 +22,6 @@ namespace LasseVK.Jobs.PostgreSQL.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("JobEntityJobEntity", b =>
-                {
-                    b.Property<string>("DependsOnId")
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<string>("DependsOnMeId")
-                        .HasColumnType("character varying(32)");
-
-                    b.HasKey("DependsOnId", "DependsOnMeId");
-
-                    b.HasIndex("DependsOnMeId");
-
-                    b.ToTable("JobEntityJobEntity");
-                });
-
             modelBuilder.Entity("LasseVK.Jobs.PostgreSQL.JobEntity", b =>
                 {
                     b.Property<string>("Id")
@@ -49,9 +34,9 @@ namespace LasseVK.Jobs.PostgreSQL.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("group");
 
-                    b.Property<string>("JobJson")
+                    b.Property<string>("Json")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("json")
                         .HasColumnName("json");
 
                     b.Property<int>("Status")
@@ -72,14 +57,15 @@ namespace LasseVK.Jobs.PostgreSQL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Jobs");
+                    b.ToTable("jobs");
                 });
 
             modelBuilder.Entity("LasseVK.Jobs.PostgreSQL.JobLogEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
@@ -103,22 +89,22 @@ namespace LasseVK.Jobs.PostgreSQL.Migrations
 
                     b.HasIndex(new[] { "JobId" }, "logs_job_id");
 
-                    b.ToTable("JobLogs");
+                    b.ToTable("logs");
                 });
 
-            modelBuilder.Entity("JobEntityJobEntity", b =>
+            modelBuilder.Entity("dependencies", b =>
                 {
-                    b.HasOne("LasseVK.Jobs.PostgreSQL.JobEntity", null)
-                        .WithMany()
-                        .HasForeignKey("DependsOnId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<string>("dependencyId")
+                        .HasColumnType("character varying(32)");
 
-                    b.HasOne("LasseVK.Jobs.PostgreSQL.JobEntity", null)
-                        .WithMany()
-                        .HasForeignKey("DependsOnMeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<string>("dependentId")
+                        .HasColumnType("character varying(32)");
+
+                    b.HasKey("dependencyId", "dependentId");
+
+                    b.HasIndex("dependentId");
+
+                    b.ToTable("dependencies");
                 });
 
             modelBuilder.Entity("LasseVK.Jobs.PostgreSQL.JobLogEntity", b =>
@@ -130,6 +116,21 @@ namespace LasseVK.Jobs.PostgreSQL.Migrations
                         .IsRequired();
 
                     b.Navigation("Job");
+                });
+
+            modelBuilder.Entity("dependencies", b =>
+                {
+                    b.HasOne("LasseVK.Jobs.PostgreSQL.JobEntity", null)
+                        .WithMany()
+                        .HasForeignKey("dependencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LasseVK.Jobs.PostgreSQL.JobEntity", null)
+                        .WithMany()
+                        .HasForeignKey("dependentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
