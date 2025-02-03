@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LasseVK.Jobs.PostgreSQL;
 
-[Table("jobs")]
 internal class JobEntity
 {
     [Key]

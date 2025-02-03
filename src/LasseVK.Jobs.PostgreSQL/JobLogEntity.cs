@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LasseVK.Jobs.PostgreSQL;
 
-[Table("logs")]
 [Index(nameof(JobId), Name = "logs_job_id")]
 internal class JobLogEntity
 {
