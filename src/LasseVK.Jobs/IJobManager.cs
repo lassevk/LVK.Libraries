@@ -6,4 +6,6 @@ public interface IJobManager
         where T : Job;
 
     Task HandleAllJobsAsync(CancellationToken cancellationToken);
+
+    Task<List<JobLog>> GetJobLogsAsync(string jobId, CancellationToken cancellationToken = default);
 }

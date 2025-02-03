@@ -14,7 +14,10 @@ public static class HostApplicationBuilderExtensions
 
         builder.Services.AddSingleton<IJobManager, JobManager>();
         builder.Services.AddSingleton(configuration.Options);
-        builder.Services.AddSingleton<Func<IServiceProvider, IJobStorage>>(configuration.JobStorageFactory);
+        builder.Services.AddSingleton<IJobStorage>(sp => configuration.JobStorageFactory(sp));
+
+        builder.Services.AddScoped<JobLogger>();
+        builder.Services.AddScoped<IJobLogger>(sp => sp.GetRequiredService<JobLogger>());
 
         return builder;
     }

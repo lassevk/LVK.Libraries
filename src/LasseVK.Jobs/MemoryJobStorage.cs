@@ -1,13 +1,18 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Collections.Concurrent;
+
+using Microsoft.Extensions.Logging;
 
 namespace LasseVK.Jobs;
 
 internal class MemoryJobStorage : IJobStorage
 {
     private readonly ILogger<MemoryJobStorage> _logger;
-    private readonly Dictionary<string, MemoryJobStorageEnvelope> _jobsById = new();
-    private readonly Dictionary<string, List<string>> _forwardJobDependencies = new();
-    private readonly Dictionary<string, List<string>> _backwardJobDependencies = new();
+
+    private readonly ConcurrentDictionary<string, MemoryJobStorageEnvelope> _jobsById = new();
+    private readonly ConcurrentDictionary<string, List<string>> _forwardJobDependencies = new();
+    private readonly ConcurrentDictionary<string, List<string>> _backwardJobDependencies = new();
+
+    private readonly ConcurrentDictionary<string, List<JobLog>> _jobLogsByJobId = new();
 
     public MemoryJobStorage(ILogger<MemoryJobStorage> logger)
     {
@@ -30,7 +35,14 @@ internal class MemoryJobStorage : IJobStorage
         _logger.LogInformation("Queuing job {Id} with dependencies {Dependencies}", job.Id, depList);
 
         SerializedJob serialized = JobSerializer.Serialize(job);
-        _jobsById.Add(job.Id, new MemoryJobStorageEnvelope { Id = job.Id, Job = serialized, Dependencies = depList });
+        if (!_jobsById.TryAdd(job.Id, new MemoryJobStorageEnvelope
+        {
+            Id = job.Id, Job = serialized, Dependencies = depList,
+        }))
+        {
+            throw new InvalidOperationException("Failed to add job");
+        }
+
         foreach (string dependency in depList)
         {
             addIfNeeded(_forwardJobDependencies, dependency, job.Id);
@@ -39,14 +51,9 @@ internal class MemoryJobStorage : IJobStorage
 
         return Task.CompletedTask;
 
-        void addIfNeeded(Dictionary<string, List<string>> dict, string key, string value)
+        void addIfNeeded(ConcurrentDictionary<string, List<string>> dict, string key, string value)
         {
-            if (!dict.TryGetValue(key, out List<string>? list))
-            {
-                list = new();
-                dict.Add(key, list);
-            }
-
+            List<string> list = dict.GetOrAdd(key, _ => new List<string>());
             list.Add(value);
         }
     }
@@ -78,7 +85,24 @@ internal class MemoryJobStorage : IJobStorage
 
     public Task<int> CountExecutingJobsInGroupAsync(string group, CancellationToken cancellationToken)
     {
-        return Task.FromResult(_jobsById.Values.Count(envelope => envelope.Status == JobStatus.Executing && (envelope.Job.Group ?? "") == group));
+        return Task.FromResult(_jobsById.Values.Count(envelope => envelope.Status == JobStatus.Executing && envelope.Job.Group == group));
+    }
+
+    public Task AppendJobLogs(string jobId, IEnumerable<JobLog> items, CancellationToken cancellationToken)
+    {
+        List<JobLog> list = _jobLogsByJobId.GetOrAdd(jobId, new List<JobLog>());
+        lock (list)
+        {
+            list.AddRange(items);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public Task<List<JobLog>> GetJobLogsAsync(string jobId, CancellationToken cancellationToken)
+    {
+        _jobLogsByJobId.TryGetValue(jobId, out List<JobLog>? logs);
+        return Task.FromResult(logs ?? []);
     }
 
     public Task<List<string>> GetPendingJobGroupsAsync(CancellationToken cancellationToken)

@@ -14,13 +14,13 @@ internal class JobManager : IJobManager
 
     private readonly Dictionary<Type, List<PropertyInfo>> _dependencyProperties = new();
 
-    public JobManager(ILogger<JobManager> logger, Func<IServiceProvider, IJobStorage> jobStorageFactory, IServiceProvider serviceProvider,
+    public JobManager(ILogger<JobManager> logger, IJobStorage jobStorage, IServiceProvider serviceProvider,
             JobManagerOptions options)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _options = options ?? throw new ArgumentNullException(nameof(options));
-        _jobStorage = jobStorageFactory(serviceProvider);
+        _jobStorage = jobStorage ?? throw new ArgumentNullException(nameof(jobStorage));
     }
 
     public async Task SubmitAsync<T>(T job, CancellationToken cancellationToken)
@@ -58,6 +58,8 @@ internal class JobManager : IJobManager
             }
         }
     }
+
+    public async Task<List<JobLog>> GetJobLogsAsync(string jobId, CancellationToken cancellationToken = default) => await _jobStorage.GetJobLogsAsync(jobId, cancellationToken);
 
     private async Task<bool> ExecuteJobsInGroupAsync(string group, int roomInGroup, CancellationToken cancellationToken)
     {
@@ -115,37 +117,43 @@ internal class JobManager : IJobManager
     private async Task<int> GetAvailableCapacityInGroup(string group, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Checking capacity of group {Group}", group);
-        if (_options.MaxConcurrentJobs.TryGetValue(group, out int? maxConcurrentJobs))
+        if (!_options.MaxConcurrentJobs.TryGetValue(group, out int? maxConcurrentJobs))
         {
-            if (maxConcurrentJobs == 0)
-            {
-                _logger.LogInformation("Group {Group} is disabled", group);
-                return 0;
-            }
-            else if (maxConcurrentJobs > 0)
-            {
-                int executingJobs = await _jobStorage.CountExecutingJobsInGroupAsync(group, cancellationToken);
-                if (executingJobs >= maxConcurrentJobs)
-                {
-                    _logger.LogInformation("Group {Group} is full, skipping for now", group);
-                    return 0;
-                }
-                else
-                {
-                    int roomInGroup = maxConcurrentJobs.Value - executingJobs;
-                    _logger.LogInformation("Group {Group} has {RoomInGroup} capacity available", group, roomInGroup);
-
-                    return roomInGroup;
-                }
-            }
+            return 100;
         }
 
-        return 100;
+        if (maxConcurrentJobs == 0)
+        {
+            _logger.LogInformation("Group {Group} is disabled", group);
+            return 0;
+        }
+
+        if (!(maxConcurrentJobs > 0))
+        {
+            return 100;
+        }
+
+        int executingJobs = await _jobStorage.CountExecutingJobsInGroupAsync(group, cancellationToken);
+        if (executingJobs >= maxConcurrentJobs)
+        {
+            _logger.LogInformation("Group {Group} is full, skipping for now", group);
+            return 0;
+        }
+
+        int roomInGroup = maxConcurrentJobs.Value - executingJobs;
+        _logger.LogInformation("Group {Group} has {RoomInGroup} capacity available", group, roomInGroup);
+
+        return roomInGroup;
     }
 
     private async Task HandleJobAsync(Job job, CancellationToken cancellationToken)
     {
         using IServiceScope serviceScope = _serviceProvider.CreateScope();
+
+        JobLogger jobLoggerInstance = serviceScope.ServiceProvider.GetRequiredService<JobLogger>();
+        jobLoggerInstance.SetJobId(job.Id);
+
+        IJobLogger jobLogger = jobLoggerInstance;
 
         Type handlerType = typeof(IJobHandler<>).MakeGenericType(job.GetType());
         try
@@ -154,11 +162,32 @@ internal class JobManager : IJobManager
             object handler = serviceScope.ServiceProvider.GetRequiredService(handlerType);
 
             _logger.LogInformation("Executing job {Job}", job);
+            await jobLogger.AddLogAsync($"Starting job {job}", cancellationToken);
             await ((dynamic)handler).HandleAsync((dynamic)job, cancellationToken);
+            await jobLogger.AddLogAsync($"Job {job} completed successfully", cancellationToken);
             _logger.LogInformation("Job {Job} completed successfully", job);
         }
         catch (Exception ex)
         {
+            List<JobLog> logLines =
+            [
+                new()
+                {
+                    Line = $"Job {job} failed with an exception",
+                },
+                new()
+                {
+                    Line = $"{ex.GetType().Name}: {ex.Message}",
+                },
+            ];
+
+            using var reader = new StreamReader(ex.StackTrace ?? "");
+            while (await reader.ReadLineAsync(cancellationToken) is { } line)
+            {
+                logLines.Add(new JobLog { Line = line });
+            }
+            await jobLogger.AddLogsAsync(logLines, cancellationToken);
+
             _logger.LogError(ex, "Job {Job} failed with an exception", job);
             job.Exception = new ExceptionSnapshot
             {
@@ -169,8 +198,10 @@ internal class JobManager : IJobManager
         }
         finally
         {
-            _logger.LogInformation("Marking job {Job} as completed", job);
             await _jobStorage.MarkAsCompleted(job, cancellationToken);
+
+            _logger.LogInformation("Marking job {Job} as completed", job);
+            await jobLogger.AddLogAsync($"Job {job} finished processing", cancellationToken);
         }
     }
 

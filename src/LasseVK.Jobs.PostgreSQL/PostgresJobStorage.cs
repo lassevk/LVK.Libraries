@@ -60,8 +60,11 @@ internal class PostgresJobStorage : IJobStorage
     {
         await using PostgresDbContext dbContext = await CreateDbContextAsync(cancellationToken);
 
-        List<string> groups = await dbContext.Jobs!.Where(job => job.Status == JobStatus.Queued).Where(job => job.DependsOn!.All(dependency => dependency.Status == JobStatus.Completed))
-           .Select(job => job.Group ?? "").Distinct().ToListAsync(cancellationToken);
+        List<string> groups = await dbContext.Jobs!.Where(job => job.Status == JobStatus.Queued)
+           .Where(job => job.DependsOn!.All(dependency => dependency.Status == JobStatus.Completed))
+           .Select(job => job.Group ?? "")
+           .Distinct()
+           .ToListAsync(cancellationToken);
 
         return groups;
     }
@@ -71,8 +74,10 @@ internal class PostgresJobStorage : IJobStorage
         await using PostgresDbContext dbContext = await CreateDbContextAsync(cancellationToken);
 
         List<JobEntity> entities = await dbContext.Jobs!.Where(job => (job.Group ?? "") == group && job.Status == JobStatus.Queued)
-           .Where(job => job.DependsOn!.All(dependency => dependency.Status == JobStatus.Completed)).OrderBy(job => job.Id)
-           .Take(amount).ToListAsync(cancellationToken);
+           .Where(job => job.DependsOn!.All(dependency => dependency.Status == JobStatus.Completed))
+           .OrderBy(job => job.Id)
+           .Take(amount)
+           .ToListAsync(cancellationToken);
 
         var result = new List<Job>();
         foreach (JobEntity entity in entities)
@@ -91,10 +96,9 @@ internal class PostgresJobStorage : IJobStorage
     {
         var serialized = new SerializedJob
         {
-            Identifier = entity.Identifier,
-            Group = entity.Group ?? "",
-            Json = entity.JobJson,
+            Identifier = entity.Identifier, Group = entity.Group ?? "", Json = entity.JobJson,
         };
+
         Job job = JobSerializer.Deserialize(serialized, entity.Id);
 
         List<JobEntity> dependencyEntities = await dbContext.Jobs!.Where(dependency => dependency.DependsOnMe!.Contains(entity)).ToListAsync(cancellationToken);
@@ -109,6 +113,7 @@ internal class PostgresJobStorage : IJobStorage
                 {
                     throw new InvalidOperationException("Dependent job not found");
                 }
+
                 dependencies.Add(depencency);
             }
 
@@ -150,5 +155,31 @@ internal class PostgresJobStorage : IJobStorage
         await using PostgresDbContext dbContext = await CreateDbContextAsync(cancellationToken);
 
         return await dbContext.Jobs!.Where(job => job.Group == group && job.Status == JobStatus.Executing).CountAsync(cancellationToken);
+    }
+
+    public async Task AppendJobLogs(string jobId, IEnumerable<JobLog> items, CancellationToken cancellationToken)
+    {
+        await using PostgresDbContext dbContext = await CreateDbContextAsync(cancellationToken);
+        foreach (JobLog item in items)
+        {
+            dbContext.JobLogs!.Add(new JobLogEntity
+            {
+                JobId = jobId, WhenLogged = item.When, Line = item.Line,
+            });
+        }
+
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<List<JobLog>> GetJobLogsAsync(string jobId, CancellationToken cancellationToken)
+    {
+        await using PostgresDbContext dbContext = await CreateDbContextAsync(cancellationToken);
+
+        List<JobLogEntity> logEntities = await dbContext.JobLogs!.Where(log => log.JobId == jobId).ToListAsync(cancellationToken);
+        return logEntities.Select(entity => new JobLog
+            {
+                When = entity.WhenLogged, Line = entity.Line,
+            })
+           .ToList();
     }
 }

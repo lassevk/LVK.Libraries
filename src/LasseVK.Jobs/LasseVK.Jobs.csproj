@@ -19,6 +19,9 @@
       <Compile Update="ExceptionSnapshot.cs">
         <DependentUpon>Job.cs</DependentUpon>
       </Compile>
+      <Compile Update="JobLogger.cs">
+        <DependentUpon>IJobLogger.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>

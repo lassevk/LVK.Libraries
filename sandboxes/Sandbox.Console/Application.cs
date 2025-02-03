@@ -18,7 +18,7 @@ public class Application : IConsoleApplication
     {
         await Task.Yield();
 
-        foreach (string file in Directory.EnumerateFiles(@"D:\Temp", "*.*", SearchOption.AllDirectories))
+        foreach (string file in Directory.EnumerateFiles(@"/Users/lassevk/Temp", "*.*", SearchOption.AllDirectories))
         {
             var load = new LoadFileJob { FilePath = file };
             var checksum = new ChecksumJob { File = load };

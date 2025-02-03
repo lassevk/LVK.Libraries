@@ -11,4 +11,6 @@ internal class PostgresDbContext : DbContext
     }
 
     public DbSet<JobEntity>? Jobs { get; set; }
+
+    public DbSet<JobLogEntity>? JobLogs { get; set; }
 }

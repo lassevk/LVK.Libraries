@@ -10,4 +10,7 @@ public interface IJobStorage
     Task<bool> MarkAsExecuting(string id, CancellationToken cancellationToken);
 
     Task<int> CountExecutingJobsInGroupAsync(string group, CancellationToken cancellationToken);
+
+    Task AppendJobLogs(string jobId, IEnumerable<JobLog> items, CancellationToken cancellationToken);
+    Task<List<JobLog>> GetJobLogsAsync(string jobId, CancellationToken cancellationToken);
 }

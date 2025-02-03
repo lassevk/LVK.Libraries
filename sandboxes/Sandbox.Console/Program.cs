@@ -1,14 +1,26 @@
 ﻿using LasseVK.Bootstrapping;
+using LasseVK.Jobs;
+using LasseVK.Jobs.PostgreSQL;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Sandbox.Console;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
-builder.Bootstrap(new Sandbox.Console.ModuleBootstrapper());
+
+builder.Configuration.AddUserSecrets<Program>();
+
+builder.Services.AddJobHandlers<Program>();
+
+string connectionString = builder.Configuration.GetConnectionString("Jobs") ?? throw new InvalidOperationException("No jobs connection string");
+builder.AddJobManager(configuration =>
+{
+    configuration.UsePostgreSql(connectionString);
+});
 
 IHost host = builder.Build();
 
-foreach (string filePath in Directory.GetFiles(@"D:\Temp", "*.checksum"))
+foreach (string filePath in Directory.GetFiles(@"/Users/lassevk/Temp", "*.checksum"))
 {
     File.Delete(filePath);
 }
