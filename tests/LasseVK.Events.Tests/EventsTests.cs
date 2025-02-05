@@ -4,40 +4,34 @@ using NSubstitute;
 
 namespace LasseVK.Events.Tests;
 
-public class EventsTests : IDisposable
+public class EventsTests
 {
-    private readonly ServiceProvider _serviceProvider;
-    private readonly Events _events;
-
-    public EventsTests()
-    {
-        var serviceCollection = new ServiceCollection();
-        _serviceProvider = serviceCollection.BuildServiceProvider();
-
-        _events = new Events(_serviceProvider);
-    }
-
-    public void Dispose()
-    {
-        _serviceProvider.Dispose();
-    }
-
     [Test]
     public async Task Publish_NotSubscribed_DoesNotTriggerSubscriber()
     {
-        await _events.PublishAsync("TEST");
+        var serviceCollection = new ServiceCollection();
+        ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
+
+        var events = new Events(serviceProvider);
+
+        await events.PublishAsync("TEST");
     }
 
     [Test]
     public async Task Publish_EventWithActionSubscriber_CallsAction()
     {
+        var serviceCollection = new ServiceCollection();
+        ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
+
+        var events = new Events(serviceProvider);
+
         bool called = false;
-        using IDisposable subscription = _events.Subscribe((string s) =>
+        using IDisposable subscription = events.Subscribe((string _) =>
         {
             called = true;
         });
 
-        await _events.PublishAsync("TEST");
+        await events.PublishAsync("TEST");
 
         Assert.That(called, Is.True);
     }
@@ -45,11 +39,16 @@ public class EventsTests : IDisposable
     [Test]
     public async Task Publish_EventWithEventSubscriber_CallsAction()
     {
+        var serviceCollection = new ServiceCollection();
+        ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
+
+        var events = new Events(serviceProvider);
+
         IEventSubscriber<string>? subscriber = Substitute.For<IEventSubscriber<string>>();
 
-        using IDisposable subscription = _events.Subscribe(subscriber);
+        using IDisposable subscription = events.Subscribe(subscriber);
 
-        await _events.PublishAsync("TEST");
+        await events.PublishAsync("TEST");
 
         _ = subscriber.Received().HandleAsync("TEST", Arg.Any<CancellationToken>());
     }
@@ -57,14 +56,36 @@ public class EventsTests : IDisposable
     [Test]
     public async Task Publish_EventWithUnsubscribedEventSubscriber_DoesNotCallAction()
     {
+        var serviceCollection = new ServiceCollection();
+        ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
+
+        var events = new Events(serviceProvider);
+
         IEventSubscriber<string>? subscriber = Substitute.For<IEventSubscriber<string>>();
 
-        using (_events.Subscribe(subscriber))
+        using (events.Subscribe(subscriber))
         {
         }
 
-        await _events.PublishAsync("TEST");
+        await events.PublishAsync("TEST");
 
         _ = subscriber.DidNotReceive().HandleAsync("TEST", Arg.Any<CancellationToken>());
+    }
+
+    [Test]
+    public async Task Publish_EventRegisteredAsService_CallsEventHandler()
+    {
+        IEventSubscriber<string>? handler = Substitute.For<IEventSubscriber<string>>();
+        handler.HandleAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
+
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.AddSingleton(handler);
+        ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
+
+        var events = new Events(serviceProvider);
+
+        await events.PublishAsync("TEST");
+
+        _ = handler.Received().HandleAsync("TEST", Arg.Any<CancellationToken>());
     }
 }
