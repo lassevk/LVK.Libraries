@@ -26,7 +26,7 @@ public static class HostExtensions
         }
         catch (TaskCanceledException)
         {
-            if (Environment.ExitCode != 0)
+            if (Environment.ExitCode == 0)
             {
                 Environment.ExitCode = 1;
             }
