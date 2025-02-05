@@ -23,12 +23,32 @@ public class EventsTests
         var serviceCollection = new ServiceCollection();
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
-        var events = new Events(serviceProvider);
+        IEvents events = new Events(serviceProvider);
 
         bool called = false;
         using IDisposable subscription = events.Subscribe((string _) =>
         {
             called = true;
+        });
+
+        await events.PublishAsync("TEST");
+
+        Assert.That(called, Is.True);
+    }
+
+    [Test]
+    public async Task Publish_EventWithAsyncActionSubscriber_CallsAction()
+    {
+        var serviceCollection = new ServiceCollection();
+        ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
+
+        IEvents events = new Events(serviceProvider);
+
+        bool called = false;
+        using IDisposable subscription = events.Subscribe((string _) =>
+        {
+            called = true;
+            return Task.CompletedTask;
         });
 
         await events.PublishAsync("TEST");

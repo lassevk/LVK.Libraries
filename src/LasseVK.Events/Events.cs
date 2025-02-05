@@ -30,9 +30,6 @@ internal class Events : IEvents
         await Task.WhenAll(subscribers.Select(subscriber => subscriber.HandleAsync(evt, token)));
     }
 
-    public IDisposable Subscribe<T>(Action<T> subscriber) => Subscribe(new ActionSubscriber<T>(subscriber));
-    public IDisposable Subscribe<T>(Func<T, Task> subscriber) => Subscribe(new AsyncActionSubscriber<T>(subscriber));
-
     public IDisposable Subscribe<T>(IEventSubscriber<T> subscriber)
     {
         List<object> subscriberList = _subscribers.GetOrAdd(typeof(T), _ => new List<object>());
