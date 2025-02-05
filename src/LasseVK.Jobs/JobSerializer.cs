@@ -68,8 +68,6 @@ public static class JobSerializer
 
     public static SerializedJob Serialize(Job job)
     {
-        GetIdentifier(job.GetType(), out string identifier);
-
         string json = JsonSerializer.Serialize(job, _jsonSerializerOptions);
         return new SerializedJob
         {
