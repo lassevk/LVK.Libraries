@@ -1,5 +1,6 @@
 ﻿using LasseVK.Bootstrapping.ConsoleApplications;
 using LasseVK.Jobs;
+using LasseVK.Pushover;
 
 using Sandbox.Console.Jobs;
 
@@ -8,10 +9,12 @@ namespace Sandbox.Console;
 public class Application : IConsoleApplication
 {
     private readonly IJobManager _jobManager;
+    private readonly IPushover _pushover;
 
-    public Application(IJobManager jobManager)
+    public Application(IJobManager jobManager, IPushover pushover)
     {
         _jobManager = jobManager;
+        _pushover = pushover;
     }
 
     public async Task<int> RunAsync(CancellationToken cancellationToken)
@@ -27,6 +30,8 @@ public class Application : IConsoleApplication
         });
 
         await _jobManager.SubmitAsync(job, cancellationToken);
+
+        await _pushover.SendAsync("Jobs submitted", cancellationToken);
         await _jobManager.HandleAllJobsAsync(cancellationToken);
 
         return 0;

@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\LasseVK.Pushover\LasseVK.Pushover.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Bootstrapping\LasseVK.Bootstrapping.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Core\LasseVK.Core.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Events\LasseVK.Events.csproj" />

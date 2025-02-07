@@ -22,6 +22,7 @@
       <Compile Update="JobLogger.cs">
         <DependentUpon>IJobLogger.cs</DependentUpon>
       </Compile>
+      <Compile Remove="IJobWorker.cs" />
     </ItemGroup>
 
     <ItemGroup>

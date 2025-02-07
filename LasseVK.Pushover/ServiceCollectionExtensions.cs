@@ -1,0 +1,16 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+
+namespace LasseVK.Pushover;
+
+public static class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddPushoverClient(this IServiceCollection services, Action<PushoverNotificationOptions> configure)
+    {
+        services.AddHttpClient();
+        services.Configure(configure);
+        services.TryAddSingleton<IPushover, Pushover>();
+
+        return services;
+    }
+}
