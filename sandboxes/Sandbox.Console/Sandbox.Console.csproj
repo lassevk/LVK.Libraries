@@ -14,6 +14,7 @@
       <ProjectReference Include="..\..\src\LasseVK.Events\LasseVK.Events.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Jobs.PostgreSQL\LasseVK.Jobs.PostgreSQL.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Jobs\LasseVK.Jobs.csproj" />
+      <ProjectReference Include="..\..\src\LasseVK.Ssh\LasseVK.Ssh.csproj" />
     </ItemGroup>
 
     <ItemGroup>
