@@ -1,33 +1,24 @@
 ﻿using LasseVK.Bootstrapping.ConsoleApplications;
 using LasseVK.Jobs;
 
+using Microsoft.Extensions.Configuration;
+
 using Sandbox.Console.Jobs;
 
 namespace Sandbox.Console;
 
 public class Application : IConsoleApplication
 {
-    private readonly IJobManager _jobManager;
+    private readonly IConfiguration _configuration;
 
-    public Application(IJobManager jobManager)
+    public Application(IConfiguration configuration)
     {
-        _jobManager = jobManager;
+        _configuration = configuration;
     }
-
     public async Task<int> RunAsync(CancellationToken cancellationToken)
     {
-        var job = new MainJob();
-        job.Dependencies.Add(new DependencyJob
-        {
-            Counter = 1,
-        });
-        job.Dependencies.Add(new DependencyJob
-        {
-            Counter = 2,
-        });
-
-        await _jobManager.SubmitAsync(job, cancellationToken);
-        await _jobManager.HandleAllJobsAsync(cancellationToken);
+        await Task.Yield();
+        System.Console.WriteLine(_configuration["Config"]);
 
         return 0;
     }
