@@ -9,9 +9,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\LasseVK.Configuration\LasseVK.Configuration.csproj" />
       <ProjectReference Include="..\..\LasseVK.Pushover\LasseVK.Pushover.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Bootstrapping\LasseVK.Bootstrapping.csproj" />
-      <ProjectReference Include="..\..\src\LasseVK.Core\LasseVK.Core.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Events\LasseVK.Events.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Jobs.PostgreSQL\LasseVK.Jobs.PostgreSQL.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Jobs\LasseVK.Jobs.csproj" />
@@ -19,6 +19,9 @@
 
     <ItemGroup>
       <None Update="appsettings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="appsettings.Saruman.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

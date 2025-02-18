@@ -1,18 +1,15 @@
-﻿using JetBrains.Annotations;
-
-using LasseVK.Bootstrapping.CommandLineArguments;
+﻿using LasseVK.Bootstrapping.CommandLineArguments;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace LasseVK.Bootstrapping;
 
-[PublicAPI]
 public static class HostApplicationBuilderExtensions
 {
     private static readonly object _key = new();
 
-    public static IHostApplicationBuilder UseCommandLineArguments<[MeansImplicitUse] T>(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder UseCommandLineArguments<T>(this IHostApplicationBuilder builder)
         where T : class, new()
     {
         builder.Services.AddSingleton(CommandLineArgumentsHelper.CreateArguments<T>);

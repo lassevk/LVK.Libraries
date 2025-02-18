@@ -1,8 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿namespace LasseVK.Jobs;
 
-namespace LasseVK.Jobs;
-
-[PublicAPI]
 public class JobManagerOptions
 {
     public int CheckIntervalInSeconds { get; set; } = 1;

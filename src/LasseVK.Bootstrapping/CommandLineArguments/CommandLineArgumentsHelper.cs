@@ -2,11 +2,8 @@
 using System.Diagnostics;
 using System.Reflection;
 
-using JetBrains.Annotations;
-
 namespace LasseVK.Bootstrapping.CommandLineArguments;
 
-[PublicAPI]
 public static class CommandLineArgumentsHelper
 {
     public static T CreateArguments<T>(IServiceProvider serviceProvider)
