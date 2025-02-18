@@ -1,16 +1,13 @@
-﻿using JetBrains.Annotations;
-
-using LasseVK.Bootstrapping.ConsoleApplications;
+﻿using LasseVK.Bootstrapping.ConsoleApplications;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace LasseVK.Bootstrapping;
 
-[PublicAPI]
 public static class HostExtensions
 {
-    public static async Task RunAsConsoleApplicationAsync<[MeansImplicitUse] T>(this IHost host, CancellationToken cancellationToken = default)
+    public static async Task RunAsConsoleApplicationAsync<T>(this IHost host, CancellationToken cancellationToken = default)
         where T : class, IConsoleApplication
     {
         IHostApplicationLifetime hal = host.Services.GetRequiredService<IHostApplicationLifetime>();
@@ -38,7 +35,7 @@ public static class HostExtensions
         }
     }
 
-    public static async Task InitializeAsync<[MeansImplicitUse] T>(this T host, CancellationToken cancellationToken = default)
+    public static async Task InitializeAsync<T>(this T host, CancellationToken cancellationToken = default)
         where T : IHost
     {
         IEnumerable<IHostInitializer<T>> initializers = host.Services.GetServices<IHostInitializer<T>>();

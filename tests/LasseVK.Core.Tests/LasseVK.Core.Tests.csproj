@@ -24,8 +24,4 @@
         </PackageReference>
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\src\LasseVK.Core\LasseVK.Core.csproj" />
-    </ItemGroup>
-
 </Project>

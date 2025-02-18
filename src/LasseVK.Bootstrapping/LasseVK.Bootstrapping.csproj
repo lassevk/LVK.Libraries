@@ -11,10 +11,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LasseVK.Core\LasseVK.Core.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Update="CommandLineArguments\StringCommandLineArgumentProperty.cs">
         <DependentUpon>ICommandLineArgumentProperty.cs</DependentUpon>
       </Compile>

@@ -1,6 +1,6 @@
-namespace LasseVK;
+namespace LasseVK.Events;
 
-public sealed class ActionDisposable : IDisposable
+internal sealed class ActionDisposable : IDisposable
 {
     private Action? _action;
 
