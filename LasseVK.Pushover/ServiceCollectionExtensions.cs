@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace LasseVK.Pushover;
@@ -13,4 +14,7 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    public static IServiceCollection AddPushoverClient(this IServiceCollection services, IConfigurationSection configurationSection)
+        => AddPushoverClient(services, configurationSection.Bind);
 }
