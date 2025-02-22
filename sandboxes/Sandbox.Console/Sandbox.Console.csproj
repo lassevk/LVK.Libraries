@@ -6,6 +6,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <UserSecretsId>d2a7937d-3a95-4a3f-99af-8a94f74cdc33</UserSecretsId>
+
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
