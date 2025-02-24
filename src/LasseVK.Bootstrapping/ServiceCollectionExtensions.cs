@@ -12,7 +12,7 @@ public static class ServiceCollectionExtensions
         where T : class, IConsoleApplication
     {
         services.AddSingleton<IConsoleApplication, T>();
-        services.TryAddEnumerable(ServiceDescriptor.Singleton<IHostedService, ConsoleApplicationHostedService>());
+        services.TryAddSingleton<IHostedService, ConsoleApplicationHostedService>();
 
         return services;
     }
