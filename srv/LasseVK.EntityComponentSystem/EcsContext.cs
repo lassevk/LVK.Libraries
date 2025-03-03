@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace LasseVK.EntityComponentSystem;
 
@@ -11,6 +12,8 @@ public class EcsContext
 
     private readonly Dictionary<Type, List<EcsSystem>> _systemsByComponent = new();
     private readonly Dictionary<EcsSystem, Type> _componentsBySystem = new();
+
+    private readonly Dictionary<Type, PropertyInfo[]> _componentsProperties = new();
 
     public EcsEntity CreateEntity() => new(this, _nextId++);
 
@@ -58,8 +61,7 @@ public class EcsContext
         return entities.OrderBy(i => i).Select(id => new EcsEntity(this, id)).ToArray();
     }
 
-    internal void SetComponent<T>(int entityId, T component)
-        where T : class
+    private void SetComponent(int entityId, object component, Type componentType)
     {
         if (!_componentsByEntity.TryGetValue(entityId, out Dictionary<Type, object>? components))
         {
@@ -67,29 +69,35 @@ public class EcsContext
             _componentsByEntity.Add(entityId, components);
         }
 
-        if (!_entitiesByComponent.TryGetValue(typeof(T), out HashSet<int>? entities))
+        if (!_entitiesByComponent.TryGetValue(componentType, out HashSet<int>? entities))
         {
             entities = new HashSet<int>();
-            _entitiesByComponent.Add(typeof(T), entities);
+            _entitiesByComponent.Add(componentType, entities);
         }
 
-        _entitiesByComponent[typeof(T)].Add(entityId);
-        bool wasAdded = components.TryAdd(typeof(T), component);
+        _entitiesByComponent[componentType].Add(entityId);
+        bool wasAdded = components.TryAdd(componentType, component);
         switch (wasAdded)
         {
             case true:
-                NotifySystems<T>(system => system.AddEntity(entityId));
+                NotifySystems(componentType, system => system.AddEntity(entityId));
                 break;
 
             case false:
-                components[typeof(T)] = component;
+                components[componentType] = component;
                 break;
         }
     }
 
-    private void NotifySystems<T>(Action<EcsSystem> notify)
+    internal void SetComponent<T>(int entityId, T component)
+        where T : class
     {
-        if (!_systemsByComponent.TryGetValue(typeof(T), out List<EcsSystem>? systems))
+        SetComponent(entityId, component, typeof(T));
+    }
+
+    private void NotifySystems(Type componentType, Action<EcsSystem> notify)
+    {
+        if (!_systemsByComponent.TryGetValue(componentType, out List<EcsSystem>? systems))
         {
             return;
         }
@@ -100,31 +108,34 @@ public class EcsContext
         }
     }
 
-    internal bool TryRemoveComponent<T>(int entityId)
-        where T : class
+    private bool TryRemoveComponent(int entityId, Type componentType)
     {
         if (!_componentsByEntity.TryGetValue(entityId, out Dictionary<Type, object>? components))
         {
             return false;
         }
 
-        components.Remove(typeof(T));
+        components.Remove(componentType);
         if (components.Count == 0)
         {
             _componentsByEntity.Remove(entityId);
         }
 
-        HashSet<int> entitiesByComponent = _entitiesByComponent[typeof(T)];
+        HashSet<int> entitiesByComponent = _entitiesByComponent[componentType];
         entitiesByComponent.Remove(entityId);
         if (entitiesByComponent.Count == 0)
         {
-            _entitiesByComponent.Remove(typeof(T));
+            _entitiesByComponent.Remove(componentType);
         }
 
-        NotifySystems<T>(system => system.RemoveEntity(entityId));
+        NotifySystems(componentType, system => system.RemoveEntity(entityId));
 
         return true;
     }
+
+    internal bool TryRemoveComponent<T>(int entityId)
+        where T : class
+        => TryRemoveComponent(entityId, typeof(T));
 
     public bool TryGetComponent<T>(int entityId, [NotNullWhen(true)] out T? component)
         where T : class
@@ -144,5 +155,58 @@ public class EcsContext
 
         component = (T)value!;
         return true;
+    }
+
+    public void SetComponents<T>(int entityId, T components)
+        where T: notnull
+    {
+        PropertyInfo[] properties = GetProperties(components.GetType());
+        foreach (PropertyInfo property in properties)
+        {
+            object? value = property.GetValue(components);
+            if (value is not null)
+            {
+                SetComponent(entityId, value, property.PropertyType);
+            }
+            else
+            {
+                TryRemoveComponent(entityId, property.PropertyType);
+            }
+        }
+    }
+
+    private PropertyInfo[] GetProperties(Type type)
+    {
+        if (_componentsProperties.TryGetValue(type, out PropertyInfo[]? properties))
+        {
+            return properties;
+        }
+
+        properties = type.GetProperties();
+        foreach (PropertyInfo property in properties)
+        {
+            if (!property.CanRead)
+            {
+                throw new InvalidOperationException("All properties on components object must be readable");
+            }
+
+            if (!property.PropertyType.IsClass)
+            {
+                throw new InvalidOperationException("All properties on components object must be reference types (classes)");
+            }
+
+            if (property.PropertyType.IsAbstract)
+            {
+                throw new InvalidOperationException("All properties on components object must be concrete");
+            }
+
+            if (property.GetIndexParameters().Length > 0)
+            {
+                throw new InvalidOperationException("All properties on components object must be non-indexed");
+            }
+        }
+
+        _componentsProperties.Add(type, properties);
+        return properties;
     }
 }

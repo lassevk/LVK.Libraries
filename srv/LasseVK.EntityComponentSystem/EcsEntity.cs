@@ -33,4 +33,8 @@ public readonly record struct EcsEntity
         => _context.TryGetComponent(_id, out T? component) ? component : throw new MissingMemberException();
 
     public override string ToString() => $"entity#{Id}";
+
+    public void SetComponents<T>(T components)
+        where T : notnull
+        => _context.SetComponents(_id, components);
 }

@@ -11,26 +11,22 @@ public abstract class EcsBooleanOperatorSystem : EcsSystem
         _left = left ?? throw new ArgumentNullException(nameof(left));
         _right = right ?? throw new ArgumentNullException(nameof(right));
 
-        left.EntityAdded += OnEntityAdded;
-        left.EntityRemoved += OnEntityRemoved;
+        left.EntityAdded += OnEntityAddedOrRemoved;
+        left.EntityRemoved += OnEntityAddedOrRemoved;
 
-        right.EntityAdded += OnEntityAdded;
-        right.EntityRemoved += OnEntityRemoved;
+        right.EntityAdded += OnEntityAddedOrRemoved;
+        right.EntityRemoved += OnEntityAddedOrRemoved;
     }
 
     protected abstract bool Operator(bool isInLeft, bool isInRight);
 
-    private void OnEntityAdded(EcsSystem sender, int entityId)
+    private void OnEntityAddedOrRemoved(EcsSystem sender, int entityId)
     {
         if (Operator(_left.ContainsEntityId(entityId), _right.ContainsEntityId(entityId)))
         {
             AddEntity(entityId);
         }
-    }
-
-    private void OnEntityRemoved(EcsSystem sender, int entityId)
-    {
-        if (!Operator(_left.ContainsEntityId(entityId), _right.ContainsEntityId(entityId)))
+        else
         {
             RemoveEntity(entityId);
         }
@@ -40,10 +36,10 @@ public abstract class EcsBooleanOperatorSystem : EcsSystem
     {
         base.Dispose();
 
-        _left.EntityAdded -= OnEntityAdded;
-        _left.EntityRemoved -= OnEntityRemoved;
+        _left.EntityAdded -= OnEntityAddedOrRemoved;
+        _left.EntityRemoved -= OnEntityAddedOrRemoved;
 
-        _right.EntityAdded -= OnEntityAdded;
-        _right.EntityRemoved -= OnEntityRemoved;
+        _right.EntityAdded -= OnEntityAddedOrRemoved;
+        _right.EntityRemoved -= OnEntityAddedOrRemoved;
     }
 }

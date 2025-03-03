@@ -31,8 +31,11 @@ public class EntityTests
 
         bool result = entity.TryGetComponent(out string? value);
 
-        Assert.That(result, Is.True);
-        Assert.That(value, Is.EqualTo("test"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.True);
+            Assert.That(value, Is.EqualTo("test"));
+        });
     }
 
     [Test]
@@ -116,7 +119,73 @@ public class EntityTests
         string value1 = entity1.GetComponent<string>();
         string value2 = entity2.GetComponent<string>();
 
-        Assert.That(value1, Is.EqualTo("test"));
-        Assert.That(value2, Is.EqualTo("test2"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(value1, Is.EqualTo("test"));
+            Assert.That(value2, Is.EqualTo("test2"));
+        });
+    }
+
+    [Test]
+    public void Set_NoProperties_DoesNotAddComponents()
+    {
+        var context = new EcsContext();
+        EcsEntity entity = context.CreateEntity();
+
+        entity.SetComponents(new
+        {
+        });
+
+        bool value1 = entity.TryGetComponent<Component1>(out _);
+        bool value2 = entity.TryGetComponent<Component2>(out _);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(value1, Is.False);
+            Assert.That(value2, Is.False);
+        });
+    }
+
+    [Test]
+    public void Set_OneProperty_AddsOneComponent()
+    {
+        var context = new EcsContext();
+        EcsEntity entity = context.CreateEntity();
+
+        entity.SetComponents(new
+        {
+            c1 = new Component1(1),
+        });
+
+        bool value1 = entity.TryGetComponent<Component1>(out _);
+        bool value2 = entity.TryGetComponent<Component2>(out _);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(value1, Is.True);
+            Assert.That(value2, Is.False);
+        });
+    }
+
+    [Test]
+    public void Set_TwoProperty_AddsTwoComponents()
+    {
+        var context = new EcsContext();
+        EcsEntity entity = context.CreateEntity();
+
+        entity.SetComponents(new
+        {
+            c1 = new Component1(1),
+            c2 = new Component2("2"),
+        });
+
+        bool value1 = entity.TryGetComponent<Component1>(out _);
+        bool value2 = entity.TryGetComponent<Component2>(out _);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(value1, Is.True);
+            Assert.That(value2, Is.True);
+        });
     }
 }
