@@ -230,4 +230,34 @@ public class EntityTests
 
         Assert.That(value1, Is.Not.EqualTo(value2));
     }
+
+    [Test]
+    public void SetComponents_WithWriteOnlyProperty_ThrowsInvalidOperationException()
+    {
+        var context = new EcsContext();
+        EcsEntity entity = context.CreateEntity();
+
+        Assert.Throws<InvalidOperationException>(() => entity.SetComponents(new WriteableProperty()));
+    }
+
+    [Test]
+    public void SetComponents_WithIndexedProperty_ThrowsInvalidOperationException()
+    {
+        var context = new EcsContext();
+        EcsEntity entity = context.CreateEntity();
+
+        Assert.Throws<InvalidOperationException>(() => entity.SetComponents(new IndexedProperty()));
+    }
+
+    [Test]
+    public void SetComponents_WithValueTypeProperty_ThrowsInvalidOperationException()
+    {
+        var context = new EcsContext();
+        EcsEntity entity = context.CreateEntity();
+
+        Assert.Throws<InvalidOperationException>(() => entity.SetComponents(new
+        {
+            c1 = 42,
+        }));
+    }
 }

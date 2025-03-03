@@ -195,11 +195,6 @@ public class EcsContext
                 throw new InvalidOperationException("All properties on components object must be reference types (classes)");
             }
 
-            if (property.PropertyType.IsAbstract)
-            {
-                throw new InvalidOperationException("All properties on components object must be concrete");
-            }
-
             if (property.GetIndexParameters().Length > 0)
             {
                 throw new InvalidOperationException("All properties on components object must be non-indexed");
