@@ -9,7 +9,43 @@ public class EcsContext
     private readonly Dictionary<Type, HashSet<int>> _entitiesByComponent = new();
     private readonly Dictionary<int, Dictionary<Type, object>> _componentsByEntity = new();
 
+    private readonly Dictionary<Type, List<EcsSystem>> _systemsByComponent = new();
+    private readonly Dictionary<EcsSystem, Type> _componentsBySystem = new();
+
     public EcsEntity CreateEntity() => new(this, _nextId++);
+
+    public EcsSystem CreateSystem<T>()
+    {
+        var system = new EcsSystem(this);
+        if (!_systemsByComponent.TryGetValue(typeof(T), out List<EcsSystem>? systems))
+        {
+            systems = new List<EcsSystem>();
+            _systemsByComponent.Add(typeof(T), systems);
+        }
+
+        if (_entitiesByComponent.TryGetValue(typeof(T), out HashSet<int>? entities))
+        {
+            foreach (int entityId in entities)
+            {
+                system.AddEntity(entityId);
+            }
+        }
+
+        _componentsBySystem[system] = typeof(T);
+        systems.Add(system);
+        return system;
+    }
+
+    public void RemoveSystem(EcsSystem ecsSystem)
+    {
+        if (!_componentsBySystem.TryGetValue(ecsSystem, out Type? componentType))
+        {
+            return;
+        }
+
+        _systemsByComponent[componentType].Remove(ecsSystem);
+        _componentsBySystem.Remove(ecsSystem);
+    }
 
     public EcsEntity[] GetEntities<T>()
         where T : class
@@ -42,12 +78,25 @@ public class EcsContext
         switch (wasAdded)
         {
             case true:
-                // TODO: Notify systems
+                NotifySystems<T>(system => system.AddEntity(entityId));
                 break;
 
             case false:
                 components[typeof(T)] = component;
                 break;
+        }
+    }
+
+    private void NotifySystems<T>(Action<EcsSystem> notify)
+    {
+        if (!_systemsByComponent.TryGetValue(typeof(T), out List<EcsSystem>? systems))
+        {
+            return;
+        }
+
+        foreach (EcsSystem system in systems)
+        {
+            notify(system);
         }
     }
 
@@ -71,6 +120,8 @@ public class EcsContext
         {
             _entitiesByComponent.Remove(typeof(T));
         }
+
+        NotifySystems<T>(system => system.RemoveEntity(entityId));
 
         return true;
     }
