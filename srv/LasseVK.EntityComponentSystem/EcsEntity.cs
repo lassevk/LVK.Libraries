@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace LasseVK.EntityComponentSystem;
@@ -6,35 +5,34 @@ namespace LasseVK.EntityComponentSystem;
 public readonly record struct EcsEntity
 {
     private readonly EcsContext _context;
-    private readonly int _id;
 
     internal EcsEntity(EcsContext context, int id)
     {
         _context = context;
-        _id = id;
+        Id = id;
     }
 
-    public int Id => _id;
+    public int Id { get; }
 
     public void SetComponent<T>(T component)
         where T : class
-        => _context.SetComponent(_id, component);
+        => _context.SetComponent(Id, component);
 
     public bool TryRemoveComponent<T>()
         where T : class
-        => _context.TryRemoveComponent<T>(_id);
+        => _context.TryRemoveComponent<T>(Id);
 
     public bool TryGetComponent<T>([NotNullWhen(true)] out T? component)
         where T : class
-        => _context.TryGetComponent(_id, out component);
+        => _context.TryGetComponent(Id, out component);
 
     public T GetComponent<T>()
         where T : class
-        => _context.TryGetComponent(_id, out T? component) ? component : throw new MissingMemberException();
+        => _context.TryGetComponent(Id, out T? component) ? component : throw new MissingMemberException();
 
     public override string ToString() => $"entity#{Id}";
 
     public void SetComponents<T>(T components)
         where T : notnull
-        => _context.SetComponents(_id, components);
+        => _context.SetComponents(Id, components);
 }
