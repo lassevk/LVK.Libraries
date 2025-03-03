@@ -1,0 +1,3 @@
+namespace LasseVK.EntityComponentSystem.Tests;
+
+public sealed record Component2(string Value);
