@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace LasseVK.EntityComponentSystem;
 
-public sealed class EcsEntity
+public readonly record struct EcsEntity
 {
     private readonly EcsContext _context;
     private readonly int _id;
@@ -13,6 +13,8 @@ public sealed class EcsEntity
         _context = context;
         _id = id;
     }
+
+    public int Id => _id;
 
     public void SetComponent<T>(T component)
         where T : class
@@ -29,4 +31,6 @@ public sealed class EcsEntity
     public T GetComponent<T>()
         where T : class
         => _context.TryGetComponent(_id, out T? component) ? component : throw new MissingMemberException();
+
+    public override string ToString() => $"entity#{Id}";
 }

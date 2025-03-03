@@ -11,6 +11,17 @@ public class EcsContext
 
     public EcsEntity CreateEntity() => new(this, _nextId++);
 
+    public EcsEntity[] GetEntities<T>()
+        where T : class
+    {
+        if (!_entitiesByComponent.TryGetValue(typeof(T), out HashSet<int>? entities))
+        {
+            return [];
+        }
+
+        return entities.OrderBy(i => i).Select(id => new EcsEntity(this, id)).ToArray();
+    }
+
     internal void SetComponent<T>(int entityId, T component)
         where T : class
     {

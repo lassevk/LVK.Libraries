@@ -103,4 +103,20 @@ public class EntityTests
 
         Assert.That(value, Is.False);
     }
+
+    [Test]
+    public void GetComponent_OnTwoEntitiesWithDifferentComponentValues_ReturnsCorrectComponents()
+    {
+        var context = new EcsContext();
+        EcsEntity entity1 = context.CreateEntity();
+        entity1.SetComponent("test");
+        EcsEntity entity2 = context.CreateEntity();
+        entity2.SetComponent("test2");
+
+        string value1 = entity1.GetComponent<string>();
+        string value2 = entity2.GetComponent<string>();
+
+        Assert.That(value1, Is.EqualTo("test"));
+        Assert.That(value2, Is.EqualTo("test2"));
+    }
 }
