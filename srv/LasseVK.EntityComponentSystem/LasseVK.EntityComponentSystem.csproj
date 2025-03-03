@@ -6,4 +6,19 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Compile Update="EcsBooleanOperatorSystem.cs">
+        <DependentUpon>EcsSystem.cs</DependentUpon>
+      </Compile>
+      <Compile Update="EcsXorOperatorSystem.cs">
+        <DependentUpon>EcsBooleanOperatorSystem.cs</DependentUpon>
+      </Compile>
+      <Compile Update="EcsOrOperatorSystem.cs">
+        <DependentUpon>EcsBooleanOperatorSystem.cs</DependentUpon>
+      </Compile>
+      <Compile Update="EcsAndOperatorSystem.cs">
+        <DependentUpon>EcsBooleanOperatorSystem.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

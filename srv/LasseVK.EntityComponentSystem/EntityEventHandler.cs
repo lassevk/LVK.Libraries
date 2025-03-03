@@ -1,3 +1,3 @@
 namespace LasseVK.EntityComponentSystem;
 
-public delegate void EntityEventHandler(EcsSystem system, EcsEntity entity);
+internal delegate void EntityEventHandler(EcsSystem system, int entityId);

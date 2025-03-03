@@ -7,14 +7,14 @@ public class EcsSystem : IDisposable
 
     internal EcsSystem(EcsContext context)
     {
-        _context = context;
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
     protected internal void AddEntity(int entityId)
     {
         if (_entityIds.Add(entityId))
         {
-            EntityAdded?.Invoke(this, new EcsEntity(_context, entityId));
+            EntityAdded?.Invoke(this, entityId);
         }
     }
 
@@ -22,19 +22,25 @@ public class EcsSystem : IDisposable
     {
         if (_entityIds.Remove(entityId))
         {
-            EntityRemoved?.Invoke(this, new EcsEntity(_context, entityId));
+            EntityRemoved?.Invoke(this, entityId);
         }
     }
 
+    internal bool ContainsEntityId(int entityId) => _entityIds.Contains(entityId);
     public bool ContainsEntity(EcsEntity entity) => _entityIds.Contains(entity.Id);
+
     public EcsEntity[] GetEntities() => _entityIds.OrderBy(e => e).Select(id => new EcsEntity(_context, id)).ToArray();
 
-    public event EntityEventHandler? EntityAdded;
-    public event EntityEventHandler? EntityRemoved;
+    internal event EntityEventHandler? EntityAdded;
+    internal event EntityEventHandler? EntityRemoved;
 
     public virtual void Dispose()
     {
         _context.RemoveSystem(this);
         _entityIds.Clear();
     }
+
+    public EcsSystem And(EcsSystem other) => new EcsAndOperatorSystem(_context, this, other);
+    public EcsSystem Or(EcsSystem other) => new EcsOrOperatorSystem(_context, this, other);
+    public EcsSystem Xor(EcsSystem other) => new EcsXorOperatorSystem(_context, this, other);
 }
