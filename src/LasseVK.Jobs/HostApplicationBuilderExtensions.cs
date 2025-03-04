@@ -9,7 +9,7 @@ public static class HostApplicationBuilderExtensions
     public static IHostApplicationBuilder AddJobManager(this IHostApplicationBuilder builder, Action<JobManagerConfiguration> configure)
     {
         var configuration = new JobManagerConfiguration { Builder = builder };
-        builder.Configuration.GetSection("Jobs:Manager").Bind(configuration.Options);
+        builder.Configuration.GetSection(JobManagerConfiguration.ConfigurationKey).Bind(configuration.Options);
         configure(configuration);
 
         builder.Services.AddSingleton<IJobManager, JobManager>();
