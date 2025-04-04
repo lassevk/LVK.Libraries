@@ -1,25 +1,28 @@
 ﻿using LasseVK.Bootstrapping.ConsoleApplications;
 using LasseVK.Pushover;
+using LasseVK.RazorTemplates;
 
 using Microsoft.Extensions.Configuration;
+
+using Sandbox.Console.Components;
 
 namespace Sandbox.Console;
 
 public class Application : IConsoleApplication
 {
-    private readonly IConfiguration _configuration;
-    private readonly IPushover _pushover;
+    private readonly IRazorRenderer _razorRenderer;
 
-    public Application(IConfiguration configuration, IPushover pushover)
+    public Application(IRazorRenderer razorRenderer)
     {
-        _configuration = configuration;
-        _pushover = pushover;
+        _razorRenderer = razorRenderer ?? throw new ArgumentNullException(nameof(razorRenderer));
     }
+
     public async Task<int> RunAsync(CancellationToken cancellationToken)
     {
         await Task.Yield();
-        System.Console.WriteLine(_configuration["Config"]);
-        // await _pushover.SendAsync("Test", cancellationToken);
+
+        string html = await _razorRenderer.RenderComponentAsync<RazorPage>(config => config.WithParameter("PageName", "This is a test page").WithParameter("PersonName", "Lasse"));
+        System.Console.WriteLine(html);
 
         return 0;
     }

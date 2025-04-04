@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -17,6 +17,7 @@
       <ProjectReference Include="..\..\src\LasseVK.Events\LasseVK.Events.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Jobs.PostgreSQL\LasseVK.Jobs.PostgreSQL.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Jobs\LasseVK.Jobs.csproj" />
+      <ProjectReference Include="..\..\src\LasseVK.RazorTemplates\LasseVK.RazorTemplates.csproj" />
     </ItemGroup>
 
     <ItemGroup>
