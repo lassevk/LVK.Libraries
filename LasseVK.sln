@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LasseVK.Validation", "src\L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LasseVK.RazorTemplates", "src\LasseVK.RazorTemplates\LasseVK.RazorTemplates.csproj", "{7F0122B1-7ACB-434F-80D6-CD8717560EB3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LasseVK.Core", "src\LasseVK.Core\LasseVK.Core.csproj", "{C14726DF-65E2-4DD7-9FD8-7862FA0BF586}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,7 @@ Global
 		{A6ADB8BB-F4E8-4E57-A79E-111706AB1BAD} = {3E38D69C-35F8-437E-87F2-C5DE6C5C1D6B}
 		{163D280F-4CB7-413E-927F-2CE2725D2F63} = {B94AAAA7-BDC6-4665-967C-2BE5B55E7AF4}
 		{7F0122B1-7ACB-434F-80D6-CD8717560EB3} = {B94AAAA7-BDC6-4665-967C-2BE5B55E7AF4}
+		{C14726DF-65E2-4DD7-9FD8-7862FA0BF586} = {B94AAAA7-BDC6-4665-967C-2BE5B55E7AF4}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{FE43BE31-2430-44E0-801B-89413607526D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -119,5 +122,9 @@ Global
 		{7F0122B1-7ACB-434F-80D6-CD8717560EB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F0122B1-7ACB-434F-80D6-CD8717560EB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F0122B1-7ACB-434F-80D6-CD8717560EB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C14726DF-65E2-4DD7-9FD8-7862FA0BF586}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C14726DF-65E2-4DD7-9FD8-7862FA0BF586}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C14726DF-65E2-4DD7-9FD8-7862FA0BF586}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C14726DF-65E2-4DD7-9FD8-7862FA0BF586}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

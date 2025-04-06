@@ -38,4 +38,8 @@
         </AssemblyAttribute>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\LasseVK.Core\LasseVK.Core.csproj" />
+    </ItemGroup>
+
 </Project>
