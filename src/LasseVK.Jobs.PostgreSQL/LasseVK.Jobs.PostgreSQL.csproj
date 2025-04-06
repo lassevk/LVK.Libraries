@@ -9,11 +9,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LasseVK.Jobs\LasseVK.Jobs.csproj" />
+        <ProjectReference Include="..\LasseVK.Jobs\LasseVK.Jobs.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,12 +25,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations\" />
+        <Folder Include="Migrations\" />
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Migrations\PostgresDbContextModelSnapshot.cs" />
-      <Compile Remove="Migrations\20250203121240_Initial.Designer.cs" />
+        <Compile Remove="Migrations\PostgresDbContextModelSnapshot.cs" />
+        <Compile Remove="Migrations\20250203121240_Initial.Designer.cs" />
     </ItemGroup>
 
 </Project>

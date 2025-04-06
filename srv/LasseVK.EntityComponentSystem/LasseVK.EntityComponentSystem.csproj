@@ -9,18 +9,29 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Update="EcsBooleanOperatorSystem.cs">
-        <DependentUpon>EcsSystem.cs</DependentUpon>
-      </Compile>
-      <Compile Update="EcsXorOperatorSystem.cs">
-        <DependentUpon>EcsBooleanOperatorSystem.cs</DependentUpon>
-      </Compile>
-      <Compile Update="EcsOrOperatorSystem.cs">
-        <DependentUpon>EcsBooleanOperatorSystem.cs</DependentUpon>
-      </Compile>
-      <Compile Update="EcsAndOperatorSystem.cs">
-        <DependentUpon>EcsBooleanOperatorSystem.cs</DependentUpon>
-      </Compile>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="MinVer" Version="6.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="EcsBooleanOperatorSystem.cs">
+            <DependentUpon>EcsSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="EcsXorOperatorSystem.cs">
+            <DependentUpon>EcsBooleanOperatorSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="EcsOrOperatorSystem.cs">
+            <DependentUpon>EcsBooleanOperatorSystem.cs</DependentUpon>
+        </Compile>
+        <Compile Update="EcsAndOperatorSystem.cs">
+            <DependentUpon>EcsBooleanOperatorSystem.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
 </Project>

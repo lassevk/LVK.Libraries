@@ -20,28 +20,28 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="JobManager.cs">
-        <DependentUpon>IJobManager.cs</DependentUpon>
-      </Compile>
-      <Compile Update="MemoryJobStorage.cs">
-        <DependentUpon>IJobStorage.cs</DependentUpon>
-      </Compile>
-      <Compile Update="MemoryJobStorageEnvelope.cs">
-        <DependentUpon>MemoryJobStorage.cs</DependentUpon>
-      </Compile>
-      <Compile Update="ExceptionSnapshot.cs">
-        <DependentUpon>Job.cs</DependentUpon>
-      </Compile>
-      <Compile Update="JobLogger.cs">
-        <DependentUpon>IJobLogger.cs</DependentUpon>
-      </Compile>
-      <Compile Remove="IJobWorker.cs" />
+        <Compile Update="JobManager.cs">
+            <DependentUpon>IJobManager.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MemoryJobStorage.cs">
+            <DependentUpon>IJobStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="MemoryJobStorageEnvelope.cs">
+            <DependentUpon>MemoryJobStorage.cs</DependentUpon>
+        </Compile>
+        <Compile Update="ExceptionSnapshot.cs">
+            <DependentUpon>Job.cs</DependentUpon>
+        </Compile>
+        <Compile Update="JobLogger.cs">
+            <DependentUpon>IJobLogger.cs</DependentUpon>
+        </Compile>
+        <Compile Remove="IJobWorker.cs" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.1" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.1" />
-      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.1" />
     </ItemGroup>
 
 </Project>
