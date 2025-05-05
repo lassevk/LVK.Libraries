@@ -1,7 +1,18 @@
 ﻿@page "/"
+@using System.Globalization
+@inherits LocalizableComponentBase
 
-<PageTitle>Home</PageTitle>
+<PageTitle>@L["Title"]</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>@L["Greeting"]</h1>
 
-Welcome to your new app.
+@L["Welcome"]
+
+@if (CultureInfo.CurrentCulture.Name == "no")
+{
+    <p><button type="button" @onclick="SetEnglish">@L["SwitchToEnglish"]</button></p>
+}
+else
+{
+    <p><button type="button" @onclick="SetNorwegian">@L["SwitchToNorwegian"]</button></p>
+}

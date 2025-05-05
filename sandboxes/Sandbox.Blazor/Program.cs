@@ -1,5 +1,6 @@
 using LasseVK.Blazor;
 
+using Sandbox.Blazor;
 using Sandbox.Blazor.Components;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 builder.Services.AddLocalizationService();
+builder.Services.AddGlobalLocalizations<Global>();
 
 WebApplication app = builder.Build();
 
