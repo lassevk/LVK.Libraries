@@ -11,8 +11,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\LasseVK.Configuration\LasseVK.Configuration.csproj" />
-      <ProjectReference Include="..\..\LasseVK.Pushover\LasseVK.Pushover.csproj" />
+      <ProjectReference Include="..\..\src\LasseVK.Configuration\LasseVK.Configuration.csproj" />
+      <ProjectReference Include="..\..\src\LasseVK.Pushover\LasseVK.Pushover.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Bootstrapping\LasseVK.Bootstrapping.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Events\LasseVK.Events.csproj" />
       <ProjectReference Include="..\..\src\LasseVK.Jobs.PostgreSQL\LasseVK.Jobs.PostgreSQL.csproj" />

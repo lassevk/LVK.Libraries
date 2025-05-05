@@ -1,0 +1,25 @@
+using System.Resources;
+using Microsoft.JSInterop;
+
+namespace LasseVK.Blazor;
+
+internal class LocalizationService : ILocalizationService
+{
+    private readonly IJSRuntime _jsRuntime;
+    private readonly GlobalResourceProvider? _globalResourceProvider;
+    private readonly ResourceManager _resourceManager;
+
+    public LocalizationService(IJSRuntime jsRuntime, GlobalResourceProvider? globalResourceProvider, ResourceManager resourceResourceManager)
+    {
+        _jsRuntime = jsRuntime ?? throw new ArgumentNullException(nameof(jsRuntime));
+        _globalResourceProvider = globalResourceProvider;
+        _resourceManager = resourceResourceManager;
+    }
+
+    public string this[string key] => _resourceManager.GetString(key) ?? _globalResourceProvider?.GetString(key) ?? $"{{{key}}}";
+    
+    public async Task SetLanguageAsync(string language, bool reload)
+    {
+        await _jsRuntime.InvokeVoidAsync("setLanguageCookie", language, reload);
+    }
+}

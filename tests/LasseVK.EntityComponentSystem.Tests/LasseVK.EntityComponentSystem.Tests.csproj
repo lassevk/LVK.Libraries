@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\srv\LasseVK.EntityComponentSystem\LasseVK.EntityComponentSystem.csproj" />
+      <ProjectReference Include="..\..\src\LasseVK.EntityComponentSystem\LasseVK.EntityComponentSystem.csproj" />
     </ItemGroup>
 
 </Project>
