@@ -16,8 +16,21 @@ internal class LocalizationService : ILocalizationService
         _resourceManager = resourceResourceManager;
     }
 
-    public string this[string key] => _resourceManager.GetString(key) ?? _globalResourceProvider?.GetString(key) ?? $"{{{key}}}";
-    
+    public string this[string key]
+    {
+        get
+        {
+            try
+            {
+                return _resourceManager.GetString(key) ?? _globalResourceProvider?.GetString(key) ?? $"{{{key}}}";
+            }
+            catch (MissingManifestResourceException)
+            {
+                return $"{{{key}}}";
+            }
+        }
+    }
+
     public async Task SetLanguageAsync(string language, bool reload)
     {
         await _jsRuntime.InvokeVoidAsync("setLanguageCookie", language, reload);
