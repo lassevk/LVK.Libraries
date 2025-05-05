@@ -2,14 +2,15 @@ using System.Globalization;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
+// ReSharper disable InconsistentNaming
 
 namespace LasseVK.Blazor.Components;
 
-public class LocalizationSupport : ComponentBase
+public class LasseVKServices : ComponentBase
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public LocalizationSupport(IHttpContextAccessor httpContextAccessor)
+    public LasseVKServices(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
     }
