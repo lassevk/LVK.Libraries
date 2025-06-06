@@ -22,7 +22,7 @@ public static class JobSerializer
                     {
                         if (item.Type == typeof(Job))
                         {
-                            // Ensure we can serialize descendants without having explicit polymorphism attributes in pplace
+                            // Ensure we can serialize descendants without having explicit polymorphism attributes in place
                             item.PolymorphismOptions = new JsonPolymorphismOptions
                             {
                                 TypeDiscriminatorPropertyName = "$type", IgnoreUnrecognizedTypeDiscriminators = true, UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FailSerialization,
