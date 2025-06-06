@@ -162,7 +162,7 @@ internal class JobManager : IJobManager
                 },
             ];
 
-            using var reader = new StreamReader(ex.StackTrace ?? "");
+            using var reader = new StringReader(ex.StackTrace ?? "");
             while (await reader.ReadLineAsync(cancellationToken) is { } line)
             {
                 logLines.Add(new JobLog { Line = line });
