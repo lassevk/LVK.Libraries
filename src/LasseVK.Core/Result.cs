@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace LasseVK.Extensions;
+namespace LasseVK;
 
 public readonly struct Result<TValue, TError>
 {

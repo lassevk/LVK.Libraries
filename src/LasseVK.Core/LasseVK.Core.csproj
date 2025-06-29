@@ -6,6 +6,8 @@
         <Nullable>enable</Nullable>
 
         <IsPackable>true</IsPackable>
+
+        <RootNamespace>LasseVK</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

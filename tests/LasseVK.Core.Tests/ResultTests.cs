@@ -1,4 +1,4 @@
-﻿namespace LasseVK.Extensions.Core.Tests;
+﻿namespace LasseVK.Core.Tests;
 
 public class ResultTests
 {

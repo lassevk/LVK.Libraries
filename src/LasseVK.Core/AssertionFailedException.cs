@@ -1,4 +1,4 @@
-namespace LasseVK.Core;
+namespace LasseVK;
 
 public class AssertionFailedException : InvalidOperationException
 {

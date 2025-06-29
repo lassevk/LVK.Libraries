@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
-namespace LasseVK.Core;
+namespace LasseVK;
 
 public static class Assume
 {

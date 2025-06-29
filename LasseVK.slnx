@@ -11,7 +11,6 @@
     <Project Path="src\LasseVK.EntityComponentSystem\LasseVK.EntityComponentSystem.csproj" Type="Classic C#" />
     <Project Path="src\LasseVK.Events\LasseVK.Events.csproj" Type="Classic C#" />
     <Project Path="src\LasseVK.Extensions.Configuration\LasseVK.Extensions.Configuration.csproj" Type="Classic C#" />
-    <Project Path="src\LasseVK.Extensions.Core\LasseVK.Extensions.Core.csproj" Type="Classic C#" />
     <Project Path="src\LasseVK.Extensions.Hosting.ConsoleApplications\LasseVK.Extensions.Hosting.ConsoleApplications.csproj" Type="Classic C#" />
     <Project Path="src\LasseVK.Extensions.Hosting\LasseVK.Extensions.Hosting.csproj" Type="Classic C#" />
     <Project Path="src\LasseVK.Jobs.PostgreSQL\LasseVK.Jobs.PostgreSQL.csproj" Type="Classic C#" />
@@ -25,7 +24,6 @@
     <Project Path="tests\LasseVK.Core.Tests\LasseVK.Core.Tests.csproj" Type="Classic C#" />
     <Project Path="tests\LasseVK.EntityComponentSystem.Tests\LasseVK.EntityComponentSystem.Tests.csproj" Type="Classic C#" />
     <Project Path="tests\LasseVK.Events.Tests\LasseVK.Events.Tests.csproj" Type="Classic C#" />
-    <Project Path="tests\LasseVK.Extensions.Core.Tests\LasseVK.Extensions.Core.Tests.csproj" Type="Classic C#" />
     <Project Path="tests\LasseVK.Jobs.Tests\LasseVK.Jobs.Tests.csproj" Type="Classic C#" />
   </Folder>
 </Solution>
