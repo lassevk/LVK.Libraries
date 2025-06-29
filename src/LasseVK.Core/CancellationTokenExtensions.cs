@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace LasseVK.Extensions.Tasks;
+namespace LasseVK.Core;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class CancellationTokenExtensions

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace LasseVK.Extensions.Tasks;
+namespace LasseVK.Core;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
 public readonly struct CancellationTokenAwaiter : ICriticalNotifyCompletion

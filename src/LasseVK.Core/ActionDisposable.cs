@@ -1,4 +1,4 @@
-namespace LasseVK.Events;
+namespace LasseVK.Core;
 
 public sealed class ActionDisposable : IDisposable
 {
