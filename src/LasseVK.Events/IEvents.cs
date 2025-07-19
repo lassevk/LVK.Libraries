@@ -8,4 +8,6 @@ public interface IEvents
     IDisposable Subscribe<T>(Func<T, Task> subscriber) => Subscribe(new AsyncActionSubscriber<T>(subscriber));
 
     IDisposable Subscribe<T>(IEventSubscriber<T> subscriber);
+
+    IDisposable AutoSubscribe(IEventSubscriber subscriber);
 }

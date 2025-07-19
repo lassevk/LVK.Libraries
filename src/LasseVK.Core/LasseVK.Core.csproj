@@ -21,4 +21,13 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="ActionDisposable.cs">
+        <DependentUpon>Disposable.cs</DependentUpon>
+      </Compile>
+      <Compile Update="CompoundDisposable.cs">
+        <DependentUpon>Disposable.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

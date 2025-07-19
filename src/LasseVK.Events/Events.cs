@@ -31,20 +31,39 @@ internal class Events : IEvents
         await Task.WhenAll(subscribers.Select(subscriber => subscriber.HandleAsync(evt, token)));
     }
 
-    public IDisposable Subscribe<T>(IEventSubscriber<T> subscriber)
+    public IDisposable Subscribe<T>(IEventSubscriber<T> subscriber) => Subscribe(subscriber, typeof(T));
+
+    private IDisposable Subscribe(object subscriber, Type subscriptionType)
     {
-        List<object> subscriberList = _subscribers.GetOrAdd(typeof(T), _ => new List<object>());
+        List<object> subscriberList = _subscribers.GetOrAdd(subscriptionType, _ => new List<object>());
         lock (subscriberList)
         {
             subscriberList.Add(subscriber);
         }
 
-        return new ActionDisposable(() =>
+        return Disposable.Create(() =>
         {
             lock (subscriberList)
             {
                 subscriberList.Remove(subscriber);
             }
         });
+    }
+
+    public IDisposable AutoSubscribe(IEventSubscriber subscriber)
+    {
+        var subscriptions = new List<IDisposable>();
+
+        ArgumentNullException.ThrowIfNull(subscriber);
+
+        foreach (Type interfaceType in subscriber.GetType().GetInterfaces())
+        {
+            if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == typeof(IEventSubscriber<>))
+            {
+                subscriptions.Add(Subscribe(subscriber, interfaceType.GenericTypeArguments[0]));
+            }
+        }
+
+        return Disposable.Create(subscriptions);
     }
 }

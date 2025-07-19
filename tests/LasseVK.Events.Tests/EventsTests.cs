@@ -108,4 +108,21 @@ public class EventsTests
 
         _ = handler.Received().HandleAsync("TEST", Arg.Any<CancellationToken>());
     }
+
+    [Test]
+    public async Task AutoSubscribe_SubscribesToAllEvents()
+    {
+        var subscriber = new AutoSubscriber();
+
+        var serviceCollection = new ServiceCollection();
+        ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
+        var events = new Events(serviceProvider);
+
+        events.AutoSubscribe(subscriber);
+        await events.PublishAsync(1);
+        await events.PublishAsync("TEST");
+
+        Assert.That(subscriber.IntMessage, Is.EqualTo(1));
+        Assert.That(subscriber.StringMessage, Is.EqualTo("TEST"));
+    }
 }
