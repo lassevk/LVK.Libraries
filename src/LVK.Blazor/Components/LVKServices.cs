@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace LVK.Blazor.Components;
 
-public class LasseVKServices : ComponentBase
+public class LVKServices : ComponentBase
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public LasseVKServices(IHttpContextAccessor httpContextAccessor)
+    public LVKServices(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
     }
