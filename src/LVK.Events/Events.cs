@@ -8,7 +8,7 @@ internal class Events : IEvents
 {
     private readonly IServiceProvider _serviceProvider;
 
-    private readonly ConcurrentDictionary<Type, List<object>> _subscribers = new();
+    private readonly ConcurrentDictionary<Type, ConcurrentDictionary<object, bool>> _subscribers = new();
 
     public Events(IServiceProvider serviceProvider)
     {
@@ -18,13 +18,10 @@ internal class Events : IEvents
     public async Task PublishAsync<T>(T evt, CancellationToken token = default)
     {
         IEnumerable<IEventSubscriber<T>> subscribers = _serviceProvider.GetServices<IEventSubscriber<T>>();
-        _subscribers.TryGetValue(typeof(T), out List<object>? subscriberObjects);
+        _subscribers.TryGetValue(typeof(T), out ConcurrentDictionary<object, bool>? subscriberObjects);
         if (subscriberObjects != null)
         {
-            lock (subscriberObjects)
-            {
-                subscribers = subscribers.Concat(subscriberObjects.OfType<IEventSubscriber<T>>().ToList());
-            }
+            subscribers = subscribers.Concat(subscriberObjects.Keys.OfType<IEventSubscriber<T>>().ToList());
         }
 
         await Task.WhenAll(subscribers.Select(subscriber => subscriber.HandleAsync(evt, token)));
@@ -34,18 +31,12 @@ internal class Events : IEvents
 
     private IDisposable Subscribe(object subscriber, Type subscriptionType)
     {
-        List<object> subscriberList = _subscribers.GetOrAdd(subscriptionType, _ => new List<object>());
-        lock (subscriberList)
-        {
-            subscriberList.Add(subscriber);
-        }
+        ConcurrentDictionary<object, bool> subscriberList = _subscribers.GetOrAdd(subscriptionType, _ => []);
+        subscriberList.AddOrUpdate(subscriber, true, (_, _) => true);
 
         return Disposable.Create(() =>
         {
-            lock (subscriberList)
-            {
-                subscriberList.Remove(subscriber);
-            }
+            subscriberList.Remove(subscriber, out _);
         });
     }
 
