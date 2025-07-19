@@ -1,0 +1,29 @@
+﻿<Solution>
+  <Folder Name="/sandboxes/">
+    <Project Path="sandboxes\Sandbox.Blazor\Sandbox.Blazor.csproj" Type="Classic C#" />
+    <Project Path="sandboxes\Sandbox.Console\Sandbox.Console.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src\LVK.Blazor\LVK.Blazor.csproj" Type="Classic C#" />
+    <Project Path="src\LVK.Bootstrapping\LVK.Bootstrapping.csproj" Type="Classic C#" />
+    <Project Path="src\LVK.Configuration\LVK.Configuration.csproj" Type="Classic C#" />
+    <Project Path="src\LVK.Core\LVK.Core.csproj" Type="Classic C#" />
+    <Project Path="src\LVK.EntityComponentSystem\LVK.EntityComponentSystem.csproj" Type="Classic C#" />
+    <Project Path="src\LVK.Events\LVK.Events.csproj" Type="Classic C#" />
+    <Project Path="src\LVK.Extensions.Configuration\LVK.Extensions.Configuration.csproj" Type="Classic C#" />
+    <Project Path="src\LVK.Extensions.Hosting.ConsoleApplications\LVK.Extensions.Hosting.ConsoleApplications.csproj" Type="Classic C#" />
+    <Project Path="src\LVK.Extensions.Hosting\LVK.Extensions.Hosting.csproj" Type="Classic C#" />
+    <Project Path="src\LVK.Jobs.PostgreSQL\LVK.Jobs.PostgreSQL.csproj" Type="Classic C#" />
+    <Project Path="src\LVK.Jobs\LVK.Jobs.csproj" Type="Classic C#" />
+    <Project Path="src\LVK.Pushover\LVK.Pushover.csproj" Type="Classic C#" />
+    <Project Path="src\LVK.RazorTemplates\LVK.RazorTemplates.csproj" Type="Classic C#" />
+    <Project Path="src\LVK.Validation\LVK.Validation.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests\LVK.Bootstrapping.Tests\LVK.Bootstrapping.Tests.csproj" Type="Classic C#" />
+    <Project Path="tests\LVK.Core.Tests\LVK.Core.Tests.csproj" Type="Classic C#" />
+    <Project Path="tests\LVK.EntityComponentSystem.Tests\LVK.EntityComponentSystem.Tests.csproj" Type="Classic C#" />
+    <Project Path="tests\LVK.Events.Tests\LVK.Events.Tests.csproj" Type="Classic C#" />
+    <Project Path="tests\LVK.Jobs.Tests\LVK.Jobs.Tests.csproj" Type="Classic C#" />
+  </Folder>
+</Solution>

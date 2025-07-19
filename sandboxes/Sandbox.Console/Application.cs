@@ -1,6 +1,5 @@
-﻿using LasseVK.Bootstrapping.ConsoleApplications;
-using LasseVK.Pushover;
-using LasseVK.RazorTemplates;
+﻿using LVK.Bootstrapping.ConsoleApplications;
+using LVK.RazorTemplates;
 
 using Microsoft.Extensions.Configuration;
 

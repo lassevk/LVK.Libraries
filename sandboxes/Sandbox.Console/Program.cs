@@ -1,8 +1,8 @@
-﻿using LasseVK.Bootstrapping;
-using LasseVK.Configuration;
-using LasseVK.Jobs;
-using LasseVK.Pushover;
-using LasseVK.RazorTemplates;
+﻿using LasseVK.Jobs;
+
+using LVK.Bootstrapping;
+using LVK.Configuration;
+using LVK.RazorTemplates;
 
 using Microsoft.Extensions.Hosting;
 using Sandbox.Console;

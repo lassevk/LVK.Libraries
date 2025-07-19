@@ -1,4 +1,4 @@
-using LasseVK.Blazor;
+using LVK.Blazor;
 
 using Sandbox.Blazor;
 using Sandbox.Blazor.Components;

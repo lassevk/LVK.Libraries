@@ -11,13 +11,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\LasseVK.Configuration\LasseVK.Configuration.csproj" />
-      <ProjectReference Include="..\..\src\LasseVK.Pushover\LasseVK.Pushover.csproj" />
-      <ProjectReference Include="..\..\src\LasseVK.Bootstrapping\LasseVK.Bootstrapping.csproj" />
-      <ProjectReference Include="..\..\src\LasseVK.Events\LasseVK.Events.csproj" />
-      <ProjectReference Include="..\..\src\LasseVK.Jobs.PostgreSQL\LasseVK.Jobs.PostgreSQL.csproj" />
-      <ProjectReference Include="..\..\src\LasseVK.Jobs\LasseVK.Jobs.csproj" />
-      <ProjectReference Include="..\..\src\LasseVK.RazorTemplates\LasseVK.RazorTemplates.csproj" />
+      <ProjectReference Include="..\..\src\LVK.Configuration\LVK.Configuration.csproj" />
+      <ProjectReference Include="..\..\src\LVK.Pushover\LVK.Pushover.csproj" />
+      <ProjectReference Include="..\..\src\LVK.Bootstrapping\LVK.Bootstrapping.csproj" />
+      <ProjectReference Include="..\..\src\LVK.Events\LVK.Events.csproj" />
+      <ProjectReference Include="..\..\src\LVK.Jobs.PostgreSQL\LVK.Jobs.PostgreSQL.csproj" />
+      <ProjectReference Include="..\..\src\LVK.Jobs\LVK.Jobs.csproj" />
+      <ProjectReference Include="..\..\src\LVK.RazorTemplates\LVK.RazorTemplates.csproj" />
     </ItemGroup>
 
     <ItemGroup>
