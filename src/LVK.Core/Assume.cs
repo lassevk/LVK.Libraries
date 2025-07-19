@@ -13,7 +13,7 @@ public static class Assume
     {
         if (!condition)
         {
-            Console.Error.WriteLine($"assumption '{callerArgumentExpression}' did not hold at {callerFilePath}:{callerLineNumber} in {callerMemberName}");
+            Debug.WriteLine($"assumption '{callerArgumentExpression}' did not hold at {callerFilePath}:{callerLineNumber} in {callerMemberName}");
         }
     }
 }
