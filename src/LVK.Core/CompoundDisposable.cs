@@ -2,7 +2,7 @@
 
 internal sealed class CompoundDisposable : IDisposable
 {
-    private readonly IDisposable[] _disposables;
+    private IDisposable[]? _disposables;
 
     public CompoundDisposable(IDisposable[] disposables)
     {
@@ -11,9 +11,15 @@ internal sealed class CompoundDisposable : IDisposable
 
     public void Dispose()
     {
-        foreach (IDisposable disposable in _disposables)
+        IDisposable[]? disposables = Interlocked.Exchange(ref _disposables, null);
+        if (disposables == null)
         {
-            disposable.Dispose();
+            return;
+        }
+
+        foreach (IDisposable disposable in disposables)
+        {
+            disposable?.Dispose();
         }
     }
 }
