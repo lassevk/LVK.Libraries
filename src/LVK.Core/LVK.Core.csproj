@@ -5,8 +5,6 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 
-        <IsPackable>true</IsPackable>
-
         <RootNamespace>LVK</RootNamespace>
     </PropertyGroup>
 
