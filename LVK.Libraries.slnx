@@ -1,8 +1,4 @@
 ﻿<Solution>
-  <Folder Name="/sandboxes/">
-    <Project Path="sandboxes\Sandbox.Blazor\Sandbox.Blazor.csproj" Type="Classic C#" />
-    <Project Path="sandboxes\Sandbox.Console\Sandbox.Console.csproj" Type="Classic C#" />
-  </Folder>
   <Folder Name="/src/">
     <Project Path="src\LVK.Blazor\LVK.Blazor.csproj" Type="Classic C#" />
     <Project Path="src\LVK.Bootstrapping\LVK.Bootstrapping.csproj" Type="Classic C#" />
