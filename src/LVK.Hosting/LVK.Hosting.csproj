@@ -10,4 +10,10 @@
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.7" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="ModuleBootstrapper.cs">
+        <DependentUpon>IModuleBootstrapper.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

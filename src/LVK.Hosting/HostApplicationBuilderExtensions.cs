@@ -36,6 +36,8 @@ public static class HostApplicationBuilderExtensions
         registry = new();
         builder.Services.AddKeyedSingleton(_key, registry);
 
+        builder.Bootstrap(new ModuleBootstrapper());
+
         return registry;
     }
 
