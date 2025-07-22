@@ -4,7 +4,7 @@ using NSubstitute;
 
 namespace LVK.Events.Tests;
 
-public class EventsTests
+public class EventBusTests
 {
     [Test]
     public async Task Publish_NotSubscribed_DoesNotTriggerSubscriber()
@@ -12,7 +12,7 @@ public class EventsTests
         var serviceCollection = new ServiceCollection();
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
-        var events = new Events(serviceProvider);
+        var events = new EventBus(serviceProvider);
 
         await events.PublishAsync("TEST");
     }
@@ -23,15 +23,15 @@ public class EventsTests
         var serviceCollection = new ServiceCollection();
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
-        IEvents events = new Events(serviceProvider);
+        IEventBus eventBus = new EventBus(serviceProvider);
 
         bool called = false;
-        using IDisposable subscription = events.Subscribe((string _) =>
+        using IDisposable subscription = eventBus.Subscribe((string _) =>
         {
             called = true;
         });
 
-        await events.PublishAsync("TEST");
+        await eventBus.PublishAsync("TEST");
 
         Assert.That(called, Is.True);
     }
@@ -42,16 +42,16 @@ public class EventsTests
         var serviceCollection = new ServiceCollection();
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
-        IEvents events = new Events(serviceProvider);
+        IEventBus eventBus = new EventBus(serviceProvider);
 
         bool called = false;
-        using IDisposable subscription = events.Subscribe((string _) =>
+        using IDisposable subscription = eventBus.Subscribe((string _) =>
         {
             called = true;
             return Task.CompletedTask;
         });
 
-        await events.PublishAsync("TEST");
+        await eventBus.PublishAsync("TEST");
 
         Assert.That(called, Is.True);
     }
@@ -62,7 +62,7 @@ public class EventsTests
         var serviceCollection = new ServiceCollection();
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
-        var events = new Events(serviceProvider);
+        var events = new EventBus(serviceProvider);
 
         IEventSubscriber<string>? subscriber = Substitute.For<IEventSubscriber<string>>();
 
@@ -79,7 +79,7 @@ public class EventsTests
         var serviceCollection = new ServiceCollection();
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
-        var events = new Events(serviceProvider);
+        var events = new EventBus(serviceProvider);
 
         IEventSubscriber<string>? subscriber = Substitute.For<IEventSubscriber<string>>();
 
@@ -102,7 +102,7 @@ public class EventsTests
         serviceCollection.AddSingleton(handler);
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
-        var events = new Events(serviceProvider);
+        var events = new EventBus(serviceProvider);
 
         await events.PublishAsync("TEST");
 
@@ -116,7 +116,7 @@ public class EventsTests
 
         var serviceCollection = new ServiceCollection();
         ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
-        var events = new Events(serviceProvider);
+        var events = new EventBus(serviceProvider);
 
         events.AutoSubscribe(subscriber);
         await events.PublishAsync(1);

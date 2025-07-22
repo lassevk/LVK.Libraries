@@ -1,6 +1,9 @@
+using JetBrains.Annotations;
+
 namespace LVK.Events;
 
-public interface IEvents
+[PublicAPI]
+public interface IEventBus
 {
     Task PublishAsync<T>(T evt, CancellationToken token = default);
 

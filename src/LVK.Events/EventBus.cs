@@ -4,13 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LVK.Events;
 
-internal class Events : IEvents
+internal class EventBus : IEventBus
 {
     private readonly IServiceProvider _serviceProvider;
 
     private readonly ConcurrentDictionary<Type, ConcurrentDictionary<object, bool>> _subscribers = new();
 
-    public Events(IServiceProvider serviceProvider)
+    public EventBus(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
     }

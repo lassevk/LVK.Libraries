@@ -17,8 +17,8 @@
         <Compile Update="ActionSubscriber.cs">
             <DependentUpon>IEventSubscriber.cs</DependentUpon>
         </Compile>
-        <Compile Update="Events.cs">
-            <DependentUpon>IEvents.cs</DependentUpon>
+        <Compile Update="EventBus.cs">
+            <DependentUpon>IEventBus.cs</DependentUpon>
         </Compile>
     </ItemGroup>
 
@@ -29,6 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\LVK.Bootstrapping\LVK.Bootstrapping.csproj" />
       <ProjectReference Include="..\LVK.Core\LVK.Core.csproj" />
     </ItemGroup>
 
