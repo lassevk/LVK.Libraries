@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 
-namespace LVK.EntityFramework.PostgreSQL;
+namespace LVK.Data.PostgreSql;
 
 [PublicAPI]
 public static class DbContextExtensions

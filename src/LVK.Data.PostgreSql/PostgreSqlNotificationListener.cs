@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 using Npgsql;
 
-namespace LVK.EntityFramework.PostgreSQL;
+namespace LVK.Data.PostgreSql;
 
 internal class PostgreSqlNotificationListener<T> : IPostgreSqlNotificationListener<T>
     where T : DbContext

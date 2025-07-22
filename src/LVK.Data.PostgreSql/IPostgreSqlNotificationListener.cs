@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace LVK.EntityFramework.PostgreSQL;
+namespace LVK.Data.PostgreSql;
 
 [PublicAPI]
 public interface IPostgreSqlNotificationListener<T>

@@ -2,7 +2,7 @@
 
 using Npgsql;
 
-namespace LVK.EntityFramework.PostgreSQL;
+namespace LVK.Data.PostgreSql;
 
 internal class PostgreSqlEventsListener<T> : IDisposable
 {

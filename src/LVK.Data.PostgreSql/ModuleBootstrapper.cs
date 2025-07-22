@@ -3,7 +3,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace LVK.EntityFramework.PostgreSQL;
+namespace LVK.Data.PostgreSql;
 
 public class ModuleBootstrapper : IModuleBootstrapper
 {

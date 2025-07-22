@@ -1,4 +1,4 @@
-﻿namespace LVK.EntityFramework.PostgreSQL;
+﻿namespace LVK.Data.PostgreSql;
 
 internal class PostgreSqlNotificationsOptions
 {

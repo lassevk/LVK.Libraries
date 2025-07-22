@@ -5,7 +5,7 @@ using Dapper;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 
-namespace LVK.EntityFramework.PostgreSQL;
+namespace LVK.Data.PostgreSql;
 
 internal class NotificationsInterceptor : DbConnectionInterceptor
 {
