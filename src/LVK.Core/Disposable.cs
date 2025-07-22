@@ -1,5 +1,8 @@
-﻿namespace LVK;
+﻿using JetBrains.Annotations;
 
+namespace LVK;
+
+[PublicAPI]
 public static class Disposable
 {
     public static IDisposable Create(Action action) => new ActionDisposable(action);

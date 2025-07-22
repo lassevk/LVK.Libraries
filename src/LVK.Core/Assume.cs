@@ -2,8 +2,11 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
+using JetBrains.Annotations;
+
 namespace LVK;
 
+[PublicAPI]
 public static class Assume
 {
     [Conditional("DEBUG")]

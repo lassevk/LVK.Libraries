@@ -1,7 +1,10 @@
 using System.Runtime.CompilerServices;
 
+using JetBrains.Annotations;
+
 namespace LVK;
 
+[PublicAPI]
 public readonly struct Result<TValue, TError>
 {
     private readonly TValue _value;

@@ -1,9 +1,12 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+using JetBrains.Annotations;
+
 namespace LVK;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
+[PublicAPI]
 public readonly struct CancellationTokenAwaiter : ICriticalNotifyCompletion
 {
     private readonly CancellationToken _cancellationToken;

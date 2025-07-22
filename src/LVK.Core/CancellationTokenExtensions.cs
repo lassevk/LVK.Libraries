@@ -1,8 +1,11 @@
 ﻿using System.ComponentModel;
 
+using JetBrains.Annotations;
+
 namespace LVK;
 
 [EditorBrowsable(EditorBrowsableState.Never)]
+[PublicAPI]
 public static class CancellationTokenExtensions
 {
     [EditorBrowsable(EditorBrowsableState.Never)]
