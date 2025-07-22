@@ -1,11 +1,7 @@
-﻿using System.Diagnostics;
-
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 using LVK.Hosting.ConsoleApplications.Internal;
 
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
