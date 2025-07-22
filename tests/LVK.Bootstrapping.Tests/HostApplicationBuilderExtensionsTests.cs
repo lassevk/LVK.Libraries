@@ -1,8 +1,6 @@
-﻿using LVK.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 
-using Microsoft.Extensions.Hosting;
-
-namespace LVK.Hosting.Tests;
+namespace LVK.Bootstrapping.Tests;
 
 public class Tests
 {

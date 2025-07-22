@@ -1,4 +1,4 @@
-﻿using LVK.Hosting;
+﻿using LVK.Bootstrapping;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,7 +9,8 @@ public class ModuleBootstrapper : IModuleBootstrapper
 {
     public void Bootstrap(IHostApplicationBuilder builder)
     {
-        builder.Services.AddTransient<IPostgreSqlNotifications, PostgreSqlNotifications>();
         builder.Services.AddScoped<NotificationsCollection>();
+
+        builder.Services.AddScoped(typeof(IPostgreSqlNotificationListener<>), typeof(PostgreSqlNotificationListener<>));
     }
 }

@@ -2,12 +2,12 @@
 
 internal class NotificationsCollection
 {
-    private List<(string channel, string payload)> _notifications = [];
+    private List<Notification> _notifications = [];
 
-    public void Notify(string channel, string payload)
+    public void AddNotification(string channel, string payload)
     {
-        _notifications.Add((channel, payload));
+        _notifications.Add(new Notification(channel, payload));
     }
 
-    public List<(string channel, string payload)> GetNotifications() => Interlocked.Exchange(ref _notifications, []);
+    public List<Notification> GetNotifications() => Interlocked.Exchange(ref _notifications, []);
 }

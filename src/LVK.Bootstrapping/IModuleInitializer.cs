@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-
-namespace LVK.Hosting;
+﻿namespace LVK.Bootstrapping;
 
 public interface IModuleInitializer
 {
