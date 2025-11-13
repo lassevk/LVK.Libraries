@@ -6,5 +6,8 @@ namespace LVK.Data.PostgreSql;
 
 public static class NpgsqlDbContextOptionsBuilderExtensions
 {
-    public static NpgsqlDbContextOptionsBuilder Configure(this NpgsqlDbContextOptionsBuilder builder) => builder.UseNodaTime();
+    extension(NpgsqlDbContextOptionsBuilder builder)
+    {
+        public NpgsqlDbContextOptionsBuilder Configure() => builder.UseNodaTime();
+    }
 }

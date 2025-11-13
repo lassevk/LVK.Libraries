@@ -8,9 +8,12 @@ namespace LVK.Data.PostgreSql;
 [PublicAPI]
 public static class DbContextOptionsBuilderExtensions
 {
-    public static DbContextOptionsBuilder AddNotificationSupport(this DbContextOptionsBuilder builder, IServiceProvider services)
+    extension(DbContextOptionsBuilder builder)
     {
-        NotificationsInterceptor interceptor = ActivatorUtilities.CreateInstance<NotificationsInterceptor>(services);
-        return builder.AddInterceptors(interceptor);
+        public DbContextOptionsBuilder AddNotificationSupport(IServiceProvider services)
+        {
+            NotificationsInterceptor interceptor = ActivatorUtilities.CreateInstance<NotificationsInterceptor>(services);
+            return builder.AddInterceptors(interceptor);
+        }
     }
 }

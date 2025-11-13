@@ -4,5 +4,8 @@ namespace LVK.Validation;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddObjectValidation(this IServiceCollection services) => services.AddSingleton<IObjectValidationService, ObjectValidationService>();
+    extension(IServiceCollection services)
+    {
+        public IServiceCollection AddObjectValidation() => services.AddSingleton<IObjectValidationService, ObjectValidationService>();
+    }
 }

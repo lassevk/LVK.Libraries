@@ -11,30 +11,33 @@ namespace LVK.Data.PostgreSql;
 [PublicAPI]
 public static class DbContextExtensions
 {
-    public static void AddNotification(this DbContext dbContext, string channel, string payload)
+    extension(DbContext dbContext)
     {
-        NotificationsCollection notificationsCollection = dbContext.GetService<NotificationsCollection>();
-        notificationsCollection.AddNotification(channel, payload);
+        public void AddNotification(string channel, string payload)
+        {
+            NotificationsCollection notificationsCollection = dbContext.GetService<NotificationsCollection>();
+            notificationsCollection.AddNotification(channel, payload);
 
-        ILogger<DbContext> logger = dbContext.GetService<ILogger<DbContext>>();
-        logger.LogDebug("Added notification on channel {Channel}: {Payload}", channel, payload);
-    }
+            ILogger<DbContext> logger = dbContext.GetService<ILogger<DbContext>>();
+            logger.LogDebug("Added notification on channel {Channel}: {Payload}", channel, payload);
+        }
 
-    public static void AddNotification<T>(this DbContext dbContext, string channel, T payload)
-    {
-        string json = JsonSerializer.Serialize(payload);
-        AddNotification(dbContext, channel, json);
-    }
+        public void AddNotification<T>(string channel, T payload)
+        {
+            string json = JsonSerializer.Serialize(payload);
+            AddNotification(dbContext, channel, json);
+        }
 
-    public static void SendNotifications(this DbContext dbContext)
-    {
-        dbContext.Database.OpenConnection();
-        dbContext.Database.CloseConnection();
-    }
+        public void SendNotifications()
+        {
+            dbContext.Database.OpenConnection();
+            dbContext.Database.CloseConnection();
+        }
 
-    public static async Task SendNotificationsAsync(this DbContext dbContext, CancellationToken cancellationToken = default)
-    {
-        await dbContext.Database.OpenConnectionAsync(cancellationToken);
-        await dbContext.Database.CloseConnectionAsync();
+        public async Task SendNotificationsAsync(CancellationToken cancellationToken = default)
+        {
+            await dbContext.Database.OpenConnectionAsync(cancellationToken);
+            await dbContext.Database.CloseConnectionAsync();
+        }
     }
 }

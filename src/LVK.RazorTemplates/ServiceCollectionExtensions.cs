@@ -4,5 +4,8 @@ namespace LVK.RazorTemplates;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddRazorRenderer(this IServiceCollection services) => services.AddTransient<IRazorRenderer, RazorRenderer>();
+    extension(IServiceCollection services)
+    {
+        public IServiceCollection AddRazorRenderer() => services.AddTransient<IRazorRenderer, RazorRenderer>();
+    }
 }

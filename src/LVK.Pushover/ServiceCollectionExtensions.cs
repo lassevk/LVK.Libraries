@@ -6,15 +6,17 @@ namespace LVK.Pushover;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddPushoverClient(this IServiceCollection services, Action<PushoverNotificationOptions> configure)
+    extension(IServiceCollection services)
     {
-        services.AddHttpClient();
-        services.Configure(configure);
-        services.TryAddSingleton<IPushover, Pushover>();
+        public IServiceCollection AddPushoverClient(Action<PushoverNotificationOptions> configure)
+        {
+            services.AddHttpClient();
+            services.Configure(configure);
+            services.TryAddSingleton<IPushover, Pushover>();
 
-        return services;
+            return services;
+        }
+
+        public IServiceCollection AddPushoverClient(IConfigurationSection configurationSection) => AddPushoverClient(services, configurationSection.Bind);
     }
-
-    public static IServiceCollection AddPushoverClient(this IServiceCollection services, IConfigurationSection configurationSection)
-        => AddPushoverClient(services, configurationSection.Bind);
 }
