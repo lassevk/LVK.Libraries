@@ -48,8 +48,6 @@ internal class StringCommandLineProperty : CommandLineProperty, ICommandLineProp
         {
             yield return line;
         }
-
-        yield return Name + " is a string, see help text for purpose which should indicate acceptable values and formats";
     }
 
     public static ICommandLineProperty Factory(PropertyInfo property, object instance, string name, string? description) => new StringCommandLineProperty(property, instance, name, description);
