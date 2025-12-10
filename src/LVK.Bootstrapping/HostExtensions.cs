@@ -8,7 +8,7 @@ public static class HostExtensions
     extension<T>(T host)
         where T : IHost
     {
-        public async Task Initialize()
+        public async Task InitializeAsync()
         {
             var moduleInitializers = host.Services.GetServices<IModuleInitializer>().ToList();
             foreach (IModuleInitializer initializer in moduleInitializers)
