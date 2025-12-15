@@ -5,16 +5,19 @@ namespace LVK.Jobs.PostgreSQL;
 
 public static class JobManagerConfigurationExtensions
 {
-    public static JobManagerConfiguration UsePostgreSql(this JobManagerConfiguration configuration, string connectionString)
+    extension(JobManagerConfiguration configuration)
     {
-        configuration.JobStorageFactory = CreatePostgresJobStorage;
-
-        configuration.Builder.Services.AddDbContextFactory<PostgresDbContext>(options =>
+        public JobManagerConfiguration UsePostgreSql(string connectionString)
         {
-            options.UseNpgsql(connectionString);
-        });
+            configuration.JobStorageFactory = CreatePostgresJobStorage;
 
-        return configuration;
+            configuration.Builder.Services.AddDbContextFactory<PostgresDbContext>(options =>
+            {
+                options.UseNpgsql(connectionString);
+            });
+
+            return configuration;
+        }
     }
 
     private static IJobStorage CreatePostgresJobStorage(IServiceProvider serviceProvider) => ActivatorUtilities.CreateInstance<PostgresJobStorage>(serviceProvider);
