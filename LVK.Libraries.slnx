@@ -1,25 +1,26 @@
 ﻿<Solution>
   <Folder Name="/src/">
-    <Project Path="src\LVK.Blazor\LVK.Blazor.csproj" Type="Classic C#" />
-    <Project Path="src\LVK.Bootstrapping\LVK.Bootstrapping.csproj" Type="Classic C#" />
-    <Project Path="src\LVK.Core\LVK.Core.csproj" Type="Classic C#" />
-    <Project Path="src\LVK.Data.PostgreSql\LVK.Data.PostgreSql.csproj" Type="Classic C#" />
-    <Project Path="src\LVK.Data\LVK.Data.csproj" Type="Classic C#" />
-    <Project Path="src\LVK.EntityComponentSystem\LVK.EntityComponentSystem.csproj" Type="Classic C#" />
-    <Project Path="src\LVK.Events\LVK.Events.csproj" Type="Classic C#" />
-    <Project Path="src\LVK.Hosting.ConsoleApplications\LVK.Hosting.ConsoleApplications.csproj" Type="Classic C#" />
-    <Project Path="src\LVK.Hosting\LVK.Hosting.csproj" Type="Classic C#" />
-    <Project Path="src\LVK.Jobs.PostgreSQL\LVK.Jobs.PostgreSQL.csproj" Type="Classic C#" />
-    <Project Path="src\LVK.Jobs\LVK.Jobs.csproj" Type="Classic C#" />
-    <Project Path="src\LVK.Pushover\LVK.Pushover.csproj" Type="Classic C#" />
-    <Project Path="src\LVK.RazorTemplates\LVK.RazorTemplates.csproj" Type="Classic C#" />
-    <Project Path="src\LVK.Validation\LVK.Validation.csproj" Type="Classic C#" />
+    <Project Path="src/LVK.FeatureFlags/LVK.FeatureFlags.csproj" />
+    <Project Path="src\LVK.Blazor\LVK.Blazor.csproj" Type="C#" />
+    <Project Path="src\LVK.Bootstrapping\LVK.Bootstrapping.csproj" Type="C#" />
+    <Project Path="src\LVK.Core\LVK.Core.csproj" Type="C#" />
+    <Project Path="src\LVK.Data.PostgreSql\LVK.Data.PostgreSql.csproj" Type="C#" />
+    <Project Path="src\LVK.Data\LVK.Data.csproj" Type="C#" />
+    <Project Path="src\LVK.EntityComponentSystem\LVK.EntityComponentSystem.csproj" Type="C#" />
+    <Project Path="src\LVK.Events\LVK.Events.csproj" Type="C#" />
+    <Project Path="src\LVK.Hosting.ConsoleApplications\LVK.Hosting.ConsoleApplications.csproj" Type="C#" />
+    <Project Path="src\LVK.Hosting\LVK.Hosting.csproj" Type="C#" />
+    <Project Path="src\LVK.Jobs.PostgreSQL\LVK.Jobs.PostgreSQL.csproj" Type="C#" />
+    <Project Path="src\LVK.Jobs\LVK.Jobs.csproj" Type="C#" />
+    <Project Path="src\LVK.Pushover\LVK.Pushover.csproj" Type="C#" />
+    <Project Path="src\LVK.RazorTemplates\LVK.RazorTemplates.csproj" Type="C#" />
+    <Project Path="src\LVK.Validation\LVK.Validation.csproj" Type="C#" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests\LVK.Bootstrapping.Tests\LVK.Bootstrapping.Tests.csproj" Type="Classic C#" />
-    <Project Path="tests\LVK.Core.Tests\LVK.Core.Tests.csproj" Type="Classic C#" />
-    <Project Path="tests\LVK.EntityComponentSystem.Tests\LVK.EntityComponentSystem.Tests.csproj" Type="Classic C#" />
-    <Project Path="tests\LVK.Events.Tests\LVK.Events.Tests.csproj" Type="Classic C#" />
-    <Project Path="tests\LVK.Jobs.Tests\LVK.Jobs.Tests.csproj" Type="Classic C#" />
+    <Project Path="tests\LVK.Bootstrapping.Tests\LVK.Bootstrapping.Tests.csproj" Type="C#" />
+    <Project Path="tests\LVK.Core.Tests\LVK.Core.Tests.csproj" Type="C#" />
+    <Project Path="tests\LVK.EntityComponentSystem.Tests\LVK.EntityComponentSystem.Tests.csproj" Type="C#" />
+    <Project Path="tests\LVK.Events.Tests\LVK.Events.Tests.csproj" Type="C#" />
+    <Project Path="tests\LVK.Jobs.Tests\LVK.Jobs.Tests.csproj" Type="C#" />
   </Folder>
 </Solution>

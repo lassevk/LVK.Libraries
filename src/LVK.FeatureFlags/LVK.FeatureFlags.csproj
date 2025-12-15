@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\LVK.Bootstrapping\LVK.Bootstrapping.csproj" />
+      <ProjectReference Include="..\LVK.Core\LVK.Core.csproj" />
+      <ProjectReference Include="..\LVK.Hosting\LVK.Hosting.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="FeatureFlags.cs">
+        <DependentUpon>IFeatureFlags.cs</DependentUpon>
+      </Compile>
+      <Compile Update="FeatureFlagsScope.cs">
+        <DependentUpon>IFeatureFlagsScope.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>
