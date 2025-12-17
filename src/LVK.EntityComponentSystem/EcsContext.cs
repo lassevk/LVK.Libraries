@@ -17,6 +17,19 @@ public class EcsContext
 
     public EcsEntity CreateEntity() => new(this, _nextId++);
 
+    public void RemoveEntity(EcsEntity entity)
+    {
+        if (!_componentsByEntity.TryGetValue(entity.Id, out Dictionary<Type, object>? components))
+        {
+            return;
+        }
+
+        foreach (KeyValuePair<Type, object> kvp in components)
+        {
+            TryRemoveComponent(entity.Id, kvp.Key);
+        }
+    }
+
     public EcsSystem CreateSystem<T>()
     {
         var system = new EcsSystem(this);

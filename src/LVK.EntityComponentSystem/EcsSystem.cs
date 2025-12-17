@@ -43,4 +43,5 @@ public class EcsSystem : IDisposable
     public EcsSystem And(EcsSystem other) => new EcsAndOperatorSystem(_context, this, other);
     public EcsSystem Or(EcsSystem other) => new EcsOrOperatorSystem(_context, this, other);
     public EcsSystem Xor(EcsSystem other) => new EcsXorOperatorSystem(_context, this, other);
+    public EcsSystem Except(EcsSystem other) => new EcsExceptOperatorSystem(_context, this, other);
 }

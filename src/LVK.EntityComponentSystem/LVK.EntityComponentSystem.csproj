@@ -19,6 +19,9 @@
         <Compile Update="EcsAndOperatorSystem.cs">
             <DependentUpon>EcsBooleanOperatorSystem.cs</DependentUpon>
         </Compile>
+        <Compile Update="EcsExceptOperatorSystem.cs">
+          <DependentUpon>EcsBooleanOperatorSystem.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
 </Project>
