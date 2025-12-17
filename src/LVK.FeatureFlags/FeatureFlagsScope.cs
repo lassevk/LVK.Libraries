@@ -12,14 +12,14 @@ internal class FeatureFlagsScope : IFeatureFlagsScope
         _featureFlags = featureFlags;
     }
 
-    public bool IsEnabled(string flagName)
+    public async Task<bool> IsEnabled(string flagName)
     {
-        ref bool isEnabled = ref CollectionsMarshal.GetValueRefOrAddDefault(_scopeCache, flagName, out bool exists);
-        if (!exists)
+        if (!_scopeCache.TryGetValue(flagName, out bool value))
         {
-            isEnabled = _featureFlags.IsEnabled(flagName);
+            value = _scopeCache[flagName] = await _featureFlags.IsEnabled(flagName);
         }
-        return isEnabled;
+
+        return value;
     }
 
     public IFeatureFlagsScope CreateScope() => _featureFlags.CreateScope();
