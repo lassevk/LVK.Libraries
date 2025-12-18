@@ -21,8 +21,4 @@
       </Compile>
     </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Flagsmith" Version="9.0.0" />
-    </ItemGroup>
-
 </Project>
