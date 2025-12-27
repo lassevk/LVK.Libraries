@@ -12,7 +12,7 @@ public static class HostApplicationBuilderExtensions
 {
     extension(IHostApplicationBuilder builder)
     {
-        public IHostApplicationBuilder AddConsoleApplication<T>(Action<T>? configure = null)
+        public IHostApplicationBuilder AddConsoleApplication<[MeansImplicitUse] T>(Action<T>? configure = null)
             where T : class, IConsoleApplication
         {
             builder.Services.AddHostedService<ConsoleApplicationHostedService>();
@@ -20,7 +20,7 @@ public static class HostApplicationBuilderExtensions
             return builder;
         }
 
-        public IHostApplicationBuilder AddConsoleCommand<T>(Action<T>? configure = null)
+        public IHostApplicationBuilder AddConsoleCommand<[MeansImplicitUse] T>(Action<T>? configure = null)
             where T : class, IConsoleApplication
         {
             builder.Services.AddHostedService<ConsoleApplicationHostedService>();
@@ -28,7 +28,7 @@ public static class HostApplicationBuilderExtensions
             return builder;
         }
 
-        public IHostApplicationBuilder AddConsoleCommands<TProgram>()
+        public IHostApplicationBuilder AddConsoleCommands<[MeansImplicitUse] TProgram>()
             where TProgram : class
         {
             builder.Services.AddHostedService<ConsoleApplicationHostedService>();
