@@ -4,5 +4,5 @@ namespace LVK.Bootstrapping;
 
 public interface IModuleBootstrapper
 {
-    void Bootstrap(IHostApplicationBuilder builder);
+    Task BootstrapAsync(IHostApplicationBuilder builder);
 }

@@ -6,8 +6,9 @@ public class TestBootstrapper : IModuleBootstrapper
 {
     public int BootstrapCount = 0;
 
-    public void Bootstrap(IHostApplicationBuilder builder)
+    public Task BootstrapAsync(IHostApplicationBuilder builder)
     {
         BootstrapCount++;
+        return Task.CompletedTask;
     }
 }

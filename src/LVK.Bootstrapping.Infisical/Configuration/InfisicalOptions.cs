@@ -1,4 +1,4 @@
-﻿namespace LVK.Bootstrapping.Infisical;
+﻿namespace LVK.Bootstrapping.Infisical.Configuration;
 
 public class InfisicalOptions
 {
@@ -8,11 +8,14 @@ public class InfisicalOptions
     public string? ProjectId { get; set; }
     public string Environment { get; set; } = "dev";
     public string SecretPath { get; set; } = "/";
+    public long? RefreshIntervalSeconds { get; set; } = 60 * 5;
 
     public bool Validate()
     {
         if (string.IsNullOrWhiteSpace(HostUri))
+        {
             return false;
+        }
 
         bool isValid = true;
         if (string.IsNullOrWhiteSpace(ClientId))

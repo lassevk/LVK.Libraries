@@ -7,8 +7,10 @@ namespace LVK.FeatureFlags;
 
 public class ModuleBootstrapper : IModuleBootstrapper
 {
-    public void Bootstrap(IHostApplicationBuilder builder)
+    public Task BootstrapAsync(IHostApplicationBuilder builder)
     {
         builder.Services.AddFeatureFlags(options => builder.Configuration.GetSection("FeatureFlags").Bind(options));
+
+        return Task.CompletedTask;
     }
 }

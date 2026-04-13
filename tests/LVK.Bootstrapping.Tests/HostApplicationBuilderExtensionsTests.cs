@@ -5,24 +5,24 @@ namespace LVK.Bootstrapping.Tests;
 public class Tests
 {
     [Test]
-    public void Bootstrap_CalledOnce_CallsBootstrapper()
+    public async Task Bootstrap_CalledOnce_CallsBootstrapper()
     {
         HostApplicationBuilder builder = Host.CreateApplicationBuilder();
         var bootstrapper = new TestBootstrapper();
 
-        builder.Bootstrap(bootstrapper);
+        await builder.BootstrapAsync(bootstrapper);
 
         Assert.That(bootstrapper.BootstrapCount, Is.EqualTo(1));
     }
 
     [Test]
-    public void Bootstrap_CalledTwice_OnlyCallsBootstrapperOnce()
+    public async Task Bootstrap_CalledTwice_OnlyCallsBootstrapperOnce()
     {
         HostApplicationBuilder builder = Host.CreateApplicationBuilder();
         var bootstrapper = new TestBootstrapper();
 
-        builder.Bootstrap(bootstrapper);
-        builder.Bootstrap(bootstrapper);
+        await builder.BootstrapAsync(bootstrapper);
+        await builder.BootstrapAsync(bootstrapper);
 
         Assert.That(bootstrapper.BootstrapCount, Is.EqualTo(1));
     }
