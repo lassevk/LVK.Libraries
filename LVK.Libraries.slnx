@@ -1,7 +1,6 @@
 ﻿<Solution>
   <Folder Name="/src/">
     <Project Path="src/LVK.Bootstrapping.Infisical/LVK.Bootstrapping.Infisical.csproj" />
-    <Project Path="src/LVK.FeatureFlags/LVK.FeatureFlags.csproj" />
     <Project Path="src\LVK.Blazor\LVK.Blazor.csproj" />
     <Project Path="src\LVK.Bootstrapping\LVK.Bootstrapping.csproj" />
     <Project Path="src\LVK.Core\LVK.Core.csproj" />
