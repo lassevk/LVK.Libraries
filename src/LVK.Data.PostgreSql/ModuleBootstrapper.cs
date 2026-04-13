@@ -7,12 +7,10 @@ namespace LVK.Data.PostgreSql;
 
 public class ModuleBootstrapper : IModuleBootstrapper
 {
-    public Task BootstrapAsync(IHostApplicationBuilder builder)
+    public void Bootstrap(IHostApplicationBuilder builder)
     {
         builder.Services.AddScoped<NotificationsCollection>();
 
         builder.Services.AddScoped(typeof(IPostgreSqlNotificationListener<>), typeof(PostgreSqlNotificationListener<>));
-
-        return Task.CompletedTask;
     }
 }

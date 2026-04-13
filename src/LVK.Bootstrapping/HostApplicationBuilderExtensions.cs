@@ -13,7 +13,7 @@ public static class HostApplicationBuilderExtensions
 
     extension(IHostApplicationBuilder builder)
     {
-        public async Task<IHostApplicationBuilder> BootstrapAsync(IModuleBootstrapper bootstrapper)
+        public IHostApplicationBuilder Bootstrap(IModuleBootstrapper bootstrapper)
         {
             HashSet<Type> registry = _registries.GetOrAdd(builder, _ => []);
             lock (registry)
@@ -24,7 +24,7 @@ public static class HostApplicationBuilderExtensions
                 }
             }
 
-            await bootstrapper.BootstrapAsync(builder);
+            bootstrapper.Bootstrap(builder);
             return builder;
         }
     }
