@@ -16,7 +16,7 @@ public static class HostApplicationBuilderExtensions
         public async Task<IHostApplicationBuilder> AddInfisical(string configurationKey = "Infisical", Action<InfisicalOptions>? configure = null)
         {
             var options = new InfisicalOptions();
-            builder.Configuration.GetSection("Infisical").Bind(options);
+            builder.Configuration.GetSection(configurationKey).Bind(options);
             configure?.Invoke(options);
 
             if (!options.Validate())
