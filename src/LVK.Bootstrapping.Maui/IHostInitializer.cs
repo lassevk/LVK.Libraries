@@ -2,5 +2,5 @@
 
 public interface IMauiAppInitializer
 {
-    Task InitializeAsync(MauiApp host);
+    void Initialize(MauiApp host);
 }
