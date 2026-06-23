@@ -9,23 +9,48 @@ namespace LVK.Bootstrapping;
 [PublicAPI]
 public static class HostApplicationBuilderExtensions
 {
-    private static readonly ConcurrentDictionary<object, HashSet<Type>> _registries = [];
+    private static readonly Guid _registryId = Guid.NewGuid();
 
-    extension(IHostApplicationBuilder builder)
+    extension<T>(T builder)
+        where T : IHostApplicationBuilder
     {
-        public IHostApplicationBuilder Bootstrap(IModuleBootstrapper bootstrapper)
+        public T Bootstrap(IApplicationBootstrapper<T> bootstrapper)
         {
-            HashSet<Type> registry = _registries.GetOrAdd(builder, _ => []);
-            lock (registry)
+            HashSet<Type> registry = GetRegistry(builder.Properties);
+            if (!registry.Add(bootstrapper.GetType()))
             {
-                if (!registry.Add(bootstrapper.GetType()))
-                {
-                    return builder;
-                }
+                return builder;
             }
 
             bootstrapper.Bootstrap(builder);
             return builder;
         }
+    }
+
+    extension(IHostApplicationBuilder builder)
+    {
+        public IHostApplicationBuilder Bootstrap(IModuleBootstrapper bootstrapper)
+        {
+            HashSet<Type> registry = GetRegistry(builder.Properties);
+            if (!registry.Add(bootstrapper.GetType()))
+            {
+                return builder;
+            }
+
+            bootstrapper.Bootstrap(builder);
+            return builder;
+        }
+    }
+
+    private static HashSet<Type> GetRegistry(IDictionary<object, object> properties)
+    {
+        if (properties.TryGetValue(_registryId, out object? registryObject))
+        {
+            return (HashSet<Type>)registryObject;
+        }
+
+        var registry = new HashSet<Type>();
+        properties[_registryId] = registry;
+        return registry;
     }
 }
