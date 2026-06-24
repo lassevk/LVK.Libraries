@@ -32,6 +32,14 @@ public static class HostApplicationBuilderExtensions
             builder.Configuration.AddJsonFile($"appsettings.{Environment.MachineName}.json", optional: true, reloadOnChange: true);
             builder.Configuration.AddJsonFile($"appsettings.{Environment.MachineName}.{environmentName}.json", optional: true, reloadOnChange: true);
 
+            // Load per-user configuration from a stable location in the user profile, independent of the
+            // build output directory. This lets a user keep real settings (including secrets) for normal
+            // runs without committing them to the repository or having them wiped by a rebuild.
+            string appName = typeof(TProgram).Assembly.GetName().Name!;
+            string userConfigDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), appName);
+            builder.Configuration.AddJsonFile(Path.Combine(userConfigDirectory, "appsettings.json"), optional: true, reloadOnChange: true);
+            builder.Configuration.AddJsonFile(Path.Combine(userConfigDirectory, $"appsettings.{environmentName}.json"), optional: true, reloadOnChange: true);
+
             foreach (IConfigurationSource source in afterJson)
             {
                 builder.Configuration.Sources.Add(source);
